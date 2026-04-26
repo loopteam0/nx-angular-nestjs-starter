@@ -1,0 +1,165 @@
+/users:
+  get:
+    operationId: listUsers
+    tags: [Users]
+    summary: List users.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Page"
+      - $ref: "../spec.yaml#/components/parameters/PageSize"
+      - $ref: "../spec.yaml#/components/parameters/Search"
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: "../spec.yaml#/components/schemas/UserStatus"
+      - name: userType
+        in: query
+        required: false
+        schema:
+          $ref: "../spec.yaml#/components/schemas/UserType"
+      - name: roleId
+        in: query
+        required: false
+        schema:
+          $ref: "../spec.yaml#/components/schemas/Id"
+    responses:
+      '200':
+        description: Users returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  post:
+    operationId: createUser
+    tags: [Users]
+    summary: Create a user.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateUserRequest"
+    responses:
+      '201':
+        description: User created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/users/{userId}:
+  get:
+    operationId: getUser
+    tags: [Users]
+    summary: Get a user by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/UserId"
+    responses:
+      '200':
+        description: User returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateUser
+    tags: [Users]
+    summary: Update a user.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/UserId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateUserRequest"
+    responses:
+      '200':
+        description: User updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/users:bulk-import:
+  post:
+    operationId: bulkImportUsers
+    tags: [Users]
+    summary: Import users from a file or supplied rows.
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkImportUsersRequest"
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkImportUsersRequest"
+    responses:
+      '200':
+        description: Import completed.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkImportUsersResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/users/{userId}/status:
+  patch:
+    operationId: setUserStatus
+    tags: [Users]
+    summary: Activate, suspend, or archive a user.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/UserId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/SetUserStatusRequest"
+    responses:
+      '200':
+        description: User status updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"

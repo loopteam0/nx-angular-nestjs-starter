@@ -1,0 +1,858 @@
+/settings/organization:
+  get:
+    operationId: getOrganizationSettings
+    tags: [Structure]
+    summary: Get organization-level structural settings.
+    responses:
+      '200':
+        description: Organization settings returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/OrganizationSettingsResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  patch:
+    operationId: updateOrganizationSettings
+    tags: [Structure]
+    summary: Update organization-level structural settings.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateOrganizationSettingsRequest"
+    responses:
+      '200':
+        description: Organization settings updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/OrganizationSettingsResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/structure/bootstrap:
+  get:
+    operationId: getStructuralBootstrap
+    tags: [Structure]
+    summary: Get bootstrap data required for structural setup screens.
+    responses:
+      '200':
+        description: Structural bootstrap returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StructuralBootstrapResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/structure/years:
+  get:
+    operationId: listCycles
+    tags: [Structure]
+    summary: List cycles.
+    responses:
+      '200':
+        description: Cycles returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CycleListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createCycle
+    tags: [Structure]
+    summary: Create an cycle.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateCycleRequest"
+    responses:
+      '201':
+        description: Cycle created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CycleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/years/{cycleId}:
+  get:
+    operationId: getCycle
+    tags: [Structure]
+    summary: Get an cycle by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleId"
+    responses:
+      '200':
+        description: Cycle returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CycleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateCycle
+    tags: [Structure]
+    summary: Update an cycle.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateCycleRequest"
+    responses:
+      '200':
+        description: Cycle updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CycleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/terms:
+  get:
+    operationId: listTerms
+    tags: [Structure]
+    summary: List terms.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+    responses:
+      '200':
+        description: Terms returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TermListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createTerm
+    tags: [Structure]
+    summary: Create a term.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateTermRequest"
+    responses:
+      '201':
+        description: Term created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TermResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/terms/{termId}:
+  get:
+    operationId: getTerm
+    tags: [Structure]
+    summary: Get a term by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TermId"
+    responses:
+      '200':
+        description: Term returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TermResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateTerm
+    tags: [Structure]
+    summary: Update a term.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TermId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateTermRequest"
+    responses:
+      '200':
+        description: Term updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TermResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/levels:
+  get:
+    operationId: listLevels
+    tags: [Structure]
+    summary: List levels.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Search"
+    responses:
+      '200':
+        description: Levels returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/LevelListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createLevel
+    tags: [Structure]
+    summary: Create a level.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateLevelRequest"
+    responses:
+      '201':
+        description: Level created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/LevelResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/levels/{levelId}:
+  get:
+    operationId: getLevel
+    tags: [Structure]
+    summary: Get a level by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/LevelId"
+    responses:
+      '200':
+        description: Level returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/LevelResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateLevel
+    tags: [Structure]
+    summary: Update a level.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/LevelId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateLevelRequest"
+    responses:
+      '200':
+        description: Level updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/LevelResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/groups:
+  get:
+    operationId: listGroups
+    tags: [Structure]
+    summary: List groups.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Search"
+    responses:
+      '200':
+        description: Groups returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/GroupListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createGroup
+    tags: [Structure]
+    summary: Create a group.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateGroupRequest"
+    responses:
+      '201':
+        description: Group created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/GroupResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/groups/{groupId}:
+  get:
+    operationId: getGroup
+    tags: [Structure]
+    summary: Get a group by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/GroupId"
+    responses:
+      '200':
+        description: Group returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/GroupResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateGroup
+    tags: [Structure]
+    summary: Update a group.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/GroupId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateGroupRequest"
+    responses:
+      '200':
+        description: Group updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/GroupResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/cohorts:
+  get:
+    operationId: listCohorts
+    tags: [Structure]
+    summary: List cohorts.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/LevelIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/GroupIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/Search"
+    responses:
+      '200':
+        description: Cohorts returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CohortListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createCohort
+    tags: [Structure]
+    summary: Create a cohort.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateCohortRequest"
+    responses:
+      '201':
+        description: Cohort created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CohortResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/cohorts/{cohortId}:
+  get:
+    operationId: getCohort
+    tags: [Structure]
+    summary: Get a cohort by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CohortId"
+    responses:
+      '200':
+        description: Cohort returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CohortResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateCohort
+    tags: [Structure]
+    summary: Update a cohort.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CohortId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateCohortRequest"
+    responses:
+      '200':
+        description: Cohort updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CohortResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/topics:
+  get:
+    operationId: listTopics
+    tags: [Structure]
+    summary: List topics.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Search"
+    responses:
+      '200':
+        description: Topics returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TopicListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createTopic
+    tags: [Structure]
+    summary: Create a topic.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateTopicRequest"
+    responses:
+      '201':
+        description: Topic created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TopicResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/topics/{topicId}:
+  get:
+    operationId: getTopic
+    tags: [Structure]
+    summary: Get a topic by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TopicId"
+    responses:
+      '200':
+        description: Topic returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TopicResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateTopic
+    tags: [Structure]
+    summary: Update a topic.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TopicId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateTopicRequest"
+    responses:
+      '200':
+        description: Topic updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TopicResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/level-topics:bulk-upsert:
+  post:
+    operationId: bulkUpsertLevelTopics
+    tags: [Structure]
+    summary: Assign topics to levels.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkUpsertLevelTopicsRequest"
+    responses:
+      '200':
+        description: Level-topic assignments updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkUpsertLevelTopicsResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/structure/periods:
+  get:
+    operationId: listPeriodDefinitions
+    tags: [Structure]
+    summary: List period definitions.
+    responses:
+      '200':
+        description: Period definitions returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PeriodDefinitionListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createPeriodDefinition
+    tags: [Structure]
+    summary: Create a period definition.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreatePeriodDefinitionRequest"
+    responses:
+      '201':
+        description: Period definition created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PeriodDefinitionResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/periods/{periodDefinitionId}:
+  get:
+    operationId: getPeriodDefinition
+    tags: [Structure]
+    summary: Get a period definition by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PeriodDefinitionId"
+    responses:
+      '200':
+        description: Period definition returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PeriodDefinitionResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updatePeriodDefinition
+    tags: [Structure]
+    summary: Update a period definition.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PeriodDefinitionId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdatePeriodDefinitionRequest"
+    responses:
+      '200':
+        description: Period definition updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PeriodDefinitionResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/time-slots:
+  get:
+    operationId: listTimeSlots
+    tags: [Structure]
+    summary: List schedule time slots.
+    parameters:
+      - name: periodDefinitionId
+        in: query
+        required: false
+        schema:
+          $ref: "../spec.yaml#/components/schemas/Id"
+    responses:
+      '200':
+        description: Time slots returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TimeSlotListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createTimeSlot
+    tags: [Structure]
+    summary: Create a time slot.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateTimeSlotRequest"
+    responses:
+      '201':
+        description: Time slot created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TimeSlotResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/time-slots/{timeSlotId}:
+  get:
+    operationId: getTimeSlot
+    tags: [Structure]
+    summary: Get a time slot by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TimeSlotId"
+    responses:
+      '200':
+        description: Time slot returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TimeSlotResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateTimeSlot
+    tags: [Structure]
+    summary: Update a time slot.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TimeSlotId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateTimeSlotRequest"
+    responses:
+      '200':
+        description: Time slot updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/TimeSlotResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/holidays:
+  get:
+    operationId: listHolidays
+    tags: [Structure]
+    summary: List holidays.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      '200':
+        description: Holidays returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HolidayListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createHoliday
+    tags: [Structure]
+    summary: Create a holiday.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateHolidayRequest"
+    responses:
+      '201':
+        description: Holiday created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HolidayResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/structure/holidays/{holidayId}:
+  get:
+    operationId: getHoliday
+    tags: [Structure]
+    summary: Get a holiday by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/HolidayId"
+    responses:
+      '200':
+        description: Holiday returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HolidayResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateHoliday
+    tags: [Structure]
+    summary: Update a holiday.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/HolidayId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateHolidayRequest"
+    responses:
+      '200':
+        description: Holiday updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HolidayResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"

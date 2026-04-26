@@ -1,0 +1,52 @@
+/platform/bootstrap:
+  get:
+    operationId: getPlatformBootstrap
+    tags: [Platform]
+    summary: Get bootstrap data for the authenticated user session.
+    responses:
+      '200':
+        description: Bootstrap payload returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PlatformBootstrapResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/feature-flags:
+  get:
+    operationId: listFeatureFlags
+    tags: [Platform]
+    summary: List feature flags available to the authenticated user.
+    responses:
+      '200':
+        description: Feature flags returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/FeatureFlagListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/client-errors:
+  post:
+    operationId: createClientErrorEvent
+    tags: [Platform]
+    summary: Record a client-side error event for diagnostics.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/ClientErrorEventRequest"
+    responses:
+      '202':
+        description: Event accepted.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/OperationStatusResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"

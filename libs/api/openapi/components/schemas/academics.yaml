@@ -1,0 +1,806 @@
+UpdateOrganizationSettingsRequest:
+  type: object
+  properties:
+    organizationName:
+      type: string
+    shortName:
+      type: string
+    timezone:
+      type: string
+    locale:
+      type: string
+    defaultCurrency:
+      $ref: "./common.yaml#/CurrencyCode"
+    presenceTrackingMode:
+      type: string
+      enum: [daily, period]
+    ratingScaleName:
+      type: string
+
+OrganizationSettingsDetail:
+  type: object
+  required: [organizationName, timezone, locale, defaultCurrency, presenceTrackingMode]
+  properties:
+    organizationName:
+      type: string
+    shortName:
+      type: string
+    timezone:
+      type: string
+    locale:
+      type: string
+    defaultCurrency:
+      $ref: "./common.yaml#/CurrencyCode"
+    presenceTrackingMode:
+      type: string
+      enum: [daily, period]
+    ratingScaleName:
+      type: string
+    currentCycleId:
+      $ref: "./common.yaml#/Id"
+    currentTermId:
+      $ref: "./common.yaml#/Id"
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+OrganizationSettingsResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/OrganizationSettingsDetail"
+
+CycleStatus:
+  type: string
+  enum: [draft, active, closed]
+
+CycleDetail:
+  type: object
+  required: [id, name, startDate, endDate, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      $ref: "./academics.yaml#/CycleStatus"
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateCycleRequest:
+  type: object
+  required: [name, startDate, endDate]
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      $ref: "./academics.yaml#/CycleStatus"
+
+UpdateCycleRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      $ref: "./academics.yaml#/CycleStatus"
+
+CycleResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/CycleDetail"
+
+CycleListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/CycleDetail"
+
+TermStatus:
+  type: string
+  enum: [draft, active, closed]
+
+TermDetail:
+  type: object
+  required: [id, cycleId, name, startDate, endDate, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      $ref: "./academics.yaml#/TermStatus"
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateTermRequest:
+  type: object
+  required: [cycleId, name, startDate, endDate]
+  properties:
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      $ref: "./academics.yaml#/TermStatus"
+
+UpdateTermRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      $ref: "./academics.yaml#/TermStatus"
+
+TermResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/TermDetail"
+
+TermListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/TermDetail"
+
+LevelDetail:
+  type: object
+  required: [id, name, level, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    level:
+      type: integer
+      minimum: 1
+    isActive:
+      type: boolean
+    defaultCapacity:
+      type: integer
+      minimum: 1
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateLevelRequest:
+  type: object
+  required: [name, level]
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    level:
+      type: integer
+      minimum: 1
+    defaultCapacity:
+      type: integer
+      minimum: 1
+    isActive:
+      type: boolean
+
+UpdateLevelRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    level:
+      type: integer
+      minimum: 1
+    defaultCapacity:
+      type: integer
+      minimum: 1
+    isActive:
+      type: boolean
+
+LevelResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/LevelDetail"
+
+LevelListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/LevelDetail"
+
+GroupDetail:
+  type: object
+  required: [id, name, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    isActive:
+      type: boolean
+    description:
+      type: string
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateGroupRequest:
+  type: object
+  required: [name]
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    description:
+      type: string
+    isActive:
+      type: boolean
+
+UpdateGroupRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    description:
+      type: string
+    isActive:
+      type: boolean
+
+GroupResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/GroupDetail"
+
+GroupListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/GroupDetail"
+
+AssignedTopicSummary:
+  type: object
+  required: [topicId, topicName]
+  properties:
+    topicId:
+      $ref: "./common.yaml#/Id"
+    topicName:
+      type: string
+    isCore:
+      type: boolean
+
+CohortDetail:
+  type: object
+  required: [id, cycleId, levelId, groupId, displayName, capacity, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    levelId:
+      $ref: "./common.yaml#/Id"
+    levelName:
+      type: string
+    groupId:
+      $ref: "./common.yaml#/Id"
+    groupName:
+      type: string
+    displayName:
+      type: string
+    homespaceStaffUserId:
+      $ref: "./common.yaml#/Id"
+    homespaceStaffName:
+      type: string
+    spaceName:
+      type: string
+    capacity:
+      type: integer
+      minimum: 1
+    status:
+      type: string
+      enum: [draft, active, archived]
+    topics:
+      type: array
+      items:
+        $ref: "./academics.yaml#/AssignedTopicSummary"
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateCohortRequest:
+  type: object
+  required: [cycleId, levelId, groupId, capacity]
+  properties:
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    levelId:
+      $ref: "./common.yaml#/Id"
+    groupId:
+      $ref: "./common.yaml#/Id"
+    homespaceStaffUserId:
+      $ref: "./common.yaml#/Id"
+    spaceName:
+      type: string
+    capacity:
+      type: integer
+      minimum: 1
+    status:
+      type: string
+      enum: [draft, active, archived]
+
+UpdateCohortRequest:
+  type: object
+  properties:
+    homespaceStaffUserId:
+      $ref: "./common.yaml#/Id"
+    spaceName:
+      type: string
+    capacity:
+      type: integer
+      minimum: 1
+    status:
+      type: string
+      enum: [draft, active, archived]
+
+CohortResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/CohortDetail"
+
+CohortListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/CohortDetail"
+
+TopicDetail:
+  type: object
+  required: [id, code, name, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    code:
+      type: string
+    name:
+      type: string
+    shortName:
+      type: string
+    department:
+      type: string
+    isCore:
+      type: boolean
+    isActive:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateTopicRequest:
+  type: object
+  required: [code, name]
+  properties:
+    code:
+      type: string
+    name:
+      type: string
+    shortName:
+      type: string
+    department:
+      type: string
+    isCore:
+      type: boolean
+    isActive:
+      type: boolean
+
+UpdateTopicRequest:
+  type: object
+  properties:
+    code:
+      type: string
+    name:
+      type: string
+    shortName:
+      type: string
+    department:
+      type: string
+    isCore:
+      type: boolean
+    isActive:
+      type: boolean
+
+TopicResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/TopicDetail"
+
+TopicListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/TopicDetail"
+
+LevelTopicAssignmentInput:
+  type: object
+  required: [levelId, topicId]
+  properties:
+    levelId:
+      $ref: "./common.yaml#/Id"
+    topicId:
+      $ref: "./common.yaml#/Id"
+    isCore:
+      type: boolean
+
+BulkUpsertLevelTopicsRequest:
+  type: object
+  required: [assignments]
+  properties:
+    assignments:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./academics.yaml#/LevelTopicAssignmentInput"
+
+BulkUpsertLevelTopicsResponse:
+  type: object
+  required: [updatedLevelIds]
+  properties:
+    updatedLevelIds:
+      type: array
+      items:
+        $ref: "./common.yaml#/Id"
+
+PeriodDefinitionDetail:
+  type: object
+  required: [id, name, orderIndex, type, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    shortLabel:
+      type: string
+    orderIndex:
+      type: integer
+      minimum: 1
+    type:
+      type: string
+      enum: [instruction, break, assembly]
+    durationMinutes:
+      type: integer
+      minimum: 1
+    isActive:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreatePeriodDefinitionRequest:
+  type: object
+  required: [name, orderIndex, type, durationMinutes]
+  properties:
+    name:
+      type: string
+    shortLabel:
+      type: string
+    orderIndex:
+      type: integer
+      minimum: 1
+    type:
+      type: string
+      enum: [instruction, break, assembly]
+    durationMinutes:
+      type: integer
+      minimum: 1
+    isActive:
+      type: boolean
+
+UpdatePeriodDefinitionRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    shortLabel:
+      type: string
+    orderIndex:
+      type: integer
+      minimum: 1
+    type:
+      type: string
+      enum: [instruction, break, assembly]
+    durationMinutes:
+      type: integer
+      minimum: 1
+    isActive:
+      type: boolean
+
+PeriodDefinitionResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/PeriodDefinitionDetail"
+
+PeriodDefinitionListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/PeriodDefinitionDetail"
+
+TimeSlotDetail:
+  type: object
+  required: [id, periodDefinitionId, dayOfWeek, startTime, endTime, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    periodDefinitionId:
+      $ref: "./common.yaml#/Id"
+    periodName:
+      type: string
+    dayOfWeek:
+      type: string
+      enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    startTime:
+      type: string
+      pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+    endTime:
+      type: string
+      pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+    isActive:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateTimeSlotRequest:
+  type: object
+  required: [periodDefinitionId, dayOfWeek, startTime, endTime]
+  properties:
+    periodDefinitionId:
+      $ref: "./common.yaml#/Id"
+    dayOfWeek:
+      type: string
+      enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    startTime:
+      type: string
+      pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+    endTime:
+      type: string
+      pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+    isActive:
+      type: boolean
+
+UpdateTimeSlotRequest:
+  type: object
+  properties:
+    periodDefinitionId:
+      $ref: "./common.yaml#/Id"
+    dayOfWeek:
+      type: string
+      enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    startTime:
+      type: string
+      pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+    endTime:
+      type: string
+      pattern: '^([01]\\d|2[0-3]):[0-5]\\d$'
+    isActive:
+      type: boolean
+
+TimeSlotResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/TimeSlotDetail"
+
+TimeSlotListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/TimeSlotDetail"
+
+HolidayDetail:
+  type: object
+  required: [id, name, startDate, endDate]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    holidayType:
+      type: string
+      enum: [public, organization, special_break, custom]
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    appliesToCycleId:
+      $ref: "./common.yaml#/Id"
+    description:
+      type: string
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateHolidayRequest:
+  type: object
+  required: [name, startDate, endDate]
+  properties:
+    name:
+      type: string
+    holidayType:
+      type: string
+      enum: [public, organization, special_break, custom]
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    appliesToCycleId:
+      $ref: "./common.yaml#/Id"
+    description:
+      type: string
+
+UpdateHolidayRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    holidayType:
+      type: string
+      enum: [public, organization, special_break, custom]
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    appliesToCycleId:
+      $ref: "./common.yaml#/Id"
+    description:
+      type: string
+
+HolidayResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./academics.yaml#/HolidayDetail"
+
+HolidayListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./academics.yaml#/HolidayDetail"
+
+StructuralBootstrapResponse:
+  type: object
+  required: [settings, cycles, terms, levels, groups, cohorts, topics, periods, timeSlots]
+  properties:
+    settings:
+      $ref: "./academics.yaml#/OrganizationSettingsDetail"
+    cycles:
+      type: array
+      items:
+        $ref: "./academics.yaml#/CycleDetail"
+    terms:
+      type: array
+      items:
+        $ref: "./academics.yaml#/TermDetail"
+    levels:
+      type: array
+      items:
+        $ref: "./academics.yaml#/LevelDetail"
+    groups:
+      type: array
+      items:
+        $ref: "./academics.yaml#/GroupDetail"
+    cohorts:
+      type: array
+      items:
+        $ref: "./academics.yaml#/CohortDetail"
+    topics:
+      type: array
+      items:
+        $ref: "./academics.yaml#/TopicDetail"
+    periods:
+      type: array
+      items:
+        $ref: "./academics.yaml#/PeriodDefinitionDetail"
+    timeSlots:
+      type: array
+      items:
+        $ref: "./academics.yaml#/TimeSlotDetail"
+    holidays:
+      type: array
+      items:
+        $ref: "./academics.yaml#/HolidayDetail"

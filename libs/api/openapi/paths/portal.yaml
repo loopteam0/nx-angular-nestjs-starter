@@ -1,0 +1,130 @@
+/portal/member/dashboard:
+  get:
+    operationId: getPortalMemberDashboard
+    tags: [Portal]
+    summary: Get the secondary contact or member dashboard read model.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Dashboard returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberDashboardResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/portal/member/schedule:
+  get:
+    operationId: getPortalMemberSchedule
+    tags: [Portal]
+    summary: Get a schedule view for the selected member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Schedule returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PortalScheduleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/portal/member/presence:
+  get:
+    operationId: getPortalMemberPresence
+    tags: [Portal]
+    summary: Get presence summary and recent records for the selected member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      '200':
+        description: Presence view returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PortalPresenceResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/portal/member/results:
+  get:
+    operationId: getPortalMemberResults
+    tags: [Portal]
+    summary: Get published evaluation results for the selected member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Results returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PortalEvaluationsResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/portal/member/billings:
+  get:
+    operationId: getPortalMemberBilling
+    tags: [Portal]
+    summary: Get invoices, payments, and balance summary for the selected member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/InvoiceStatus"
+    responses:
+      '200':
+        description: Billing summary returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PortalBillingResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/portal/notifications:
+  get:
+    operationId: listPortalNotifications
+    tags: [Portal]
+    summary: List portal notifications for the authenticated user.
+    parameters:
+      - name: unreadOnly
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+    responses:
+      '200':
+        description: Notifications returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PortalNotificationListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"

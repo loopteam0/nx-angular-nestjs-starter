@@ -1,0 +1,39 @@
+{
+  "name": "api-openapi",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/openapi",
+  "targets": {
+    "validate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "swagger-cli validate libs/api/openapi/spec.yaml"
+      }
+    },
+    "bundle": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "swagger-cli bundle libs/api/openapi/spec.yaml --outfile dist/openapi/bundled.yaml --type yaml"
+      }
+    },
+    "generate-web-client": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "openapi-generator-cli generate -i libs/api/openapi/spec.yaml -g typescript-angular -o libs/shared/data-access/src/lib/generated/openapi --additional-properties=ngVersion=21,useSingleRequestParameter=true,providedInRoot=true"
+      }
+    },
+    "generate-nest-server-stub": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["validate"],
+      "outputs": ["{workspaceRoot}/apps/api/src/generated/openapi-server"],
+      "options": {
+        "commands": [
+          "rm -rf apps/api/src/generated/openapi-server",
+          "openapi-generator-cli generate -i libs/api/openapi/spec.yaml -g typescript-nestjs-server -o apps/api/src/generated/openapi-server",
+          "node tools/openapi/patch-nestjs-server-stub.mjs apps/api/src/generated/openapi-server"
+        ],
+        "parallel": false
+      }
+    }
+  }
+}

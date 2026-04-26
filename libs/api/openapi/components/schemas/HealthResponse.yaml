@@ -1,0 +1,38 @@
+type: object
+required:
+  - status
+  - timestamp
+properties:
+  status:
+    type: string
+    enum: [ok, deleveld, unavailable]
+  timestamp:
+    type: string
+    format: date-time
+  services:
+    type: array
+    items:
+      type: object
+      required: [service, status, checkedAt]
+      properties:
+        service:
+          type: string
+        status:
+          type: string
+          enum: [ok, deleveld, unavailable]
+        checkedAt:
+          type: string
+          format: date-time
+        latencyMs:
+          type: integer
+          minimum: 0
+        details:
+          type: object
+          additionalProperties: true
+  version:
+    type: string
+  uptimeSeconds:
+    type: integer
+    minimum: 0
+  requestId:
+    type: string

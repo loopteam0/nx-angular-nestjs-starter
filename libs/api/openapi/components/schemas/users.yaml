@@ -1,0 +1,341 @@
+RoleName:
+  type: string
+  enum: [super_admin, organization_admin, staff, billing_officer, records_manager, secondary_contact, member]
+
+UserStatus:
+  type: string
+  enum: [invited, active, suspended, archived]
+
+UserType:
+  type: string
+  enum: [staff, secondary_contact, member]
+
+PermissionDetail:
+  type: object
+  required: [code, label]
+  properties:
+    code:
+      type: string
+    label:
+      type: string
+    description:
+      type: string
+    module:
+      type: string
+
+RoleSummary:
+  type: object
+  required: [id, name, label, permissions]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      $ref: "./users.yaml#/RoleName"
+    label:
+      type: string
+    description:
+      type: string
+    permissions:
+      type: array
+      items:
+        $ref: "./users.yaml#/PermissionDetail"
+    systemRole:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateRoleRequest:
+  type: object
+  required: [name, label, permissions]
+  properties:
+    name:
+      $ref: "./users.yaml#/RoleName"
+    label:
+      type: string
+    description:
+      type: string
+    permissions:
+      type: array
+      minItems: 1
+      items:
+        type: string
+
+UpdateRoleRequest:
+  type: object
+  properties:
+    label:
+      type: string
+    description:
+      type: string
+    permissions:
+      type: array
+      items:
+        type: string
+
+RoleResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./users.yaml#/RoleSummary"
+
+RoleListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./users.yaml#/RoleSummary"
+
+PermissionListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./users.yaml#/PermissionDetail"
+
+UserRoleAssignment:
+  type: object
+  required: [roleId, name, label]
+  properties:
+    roleId:
+      $ref: "./common.yaml#/Id"
+    name:
+      $ref: "./users.yaml#/RoleName"
+    label:
+      type: string
+
+UserSummary:
+  type: object
+  required: [id, displayName, email, status, userType, roles]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    displayName:
+      type: string
+    email:
+      type: string
+      format: email
+    phoneNumber:
+      type: string
+    status:
+      $ref: "./users.yaml#/UserStatus"
+    userType:
+      $ref: "./users.yaml#/UserType"
+    roles:
+      type: array
+      items:
+        $ref: "./users.yaml#/UserRoleAssignment"
+    lastLoginAt:
+      type: string
+      format: date-time
+
+LinkedRecord:
+  type: object
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    staffNumber:
+      type: string
+
+UserDetail:
+  allOf:
+    - $ref: "./users.yaml#/UserSummary"
+    - type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+        linkedRecord:
+          $ref: "./users.yaml#/LinkedRecord"
+        preferredLocale:
+          type: string
+        preferredTimezone:
+          type: string
+        audit:
+          $ref: "./common.yaml#/AuditMetadata"
+
+CreateUserRequest:
+  type: object
+  required: [displayName, email, userType, roleIds]
+  properties:
+    displayName:
+      type: string
+    email:
+      type: string
+      format: email
+    phoneNumber:
+      type: string
+    userType:
+      $ref: "./users.yaml#/UserType"
+    roleIds:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./common.yaml#/Id"
+    linkedMemberId:
+      $ref: "./common.yaml#/Id"
+    staffCode:
+      type: string
+    sendInvite:
+      type: boolean
+      default: true
+
+UpdateUserRequest:
+  type: object
+  properties:
+    displayName:
+      type: string
+    phoneNumber:
+      type: string
+    roleIds:
+      type: array
+      items:
+        $ref: "./common.yaml#/Id"
+    preferredLocale:
+      type: string
+    preferredTimezone:
+      type: string
+
+SetUserStatusRequest:
+  type: object
+  required: [status]
+  properties:
+    status:
+      $ref: "./users.yaml#/UserStatus"
+    reason:
+      type: string
+
+UserResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./users.yaml#/UserDetail"
+
+UserListResponse:
+  type: object
+  required: [data, pageInfo]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./users.yaml#/UserSummary"
+    pageInfo:
+      $ref: "./common.yaml#/PageInfo"
+
+BulkImportUserRow:
+  type: object
+  required: [displayName, email, userType, roleNames]
+  properties:
+    displayName:
+      type: string
+    email:
+      type: string
+      format: email
+    phoneNumber:
+      type: string
+    userType:
+      $ref: "./users.yaml#/UserType"
+    roleNames:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./users.yaml#/RoleName"
+
+BulkImportUsersRequest:
+  type: object
+  properties:
+    file:
+      type: string
+      format: binary
+    rows:
+      type: array
+      items:
+        $ref: "./users.yaml#/BulkImportUserRow"
+    sendInvite:
+      type: boolean
+      default: true
+    conflictStrategy:
+      type: string
+      enum: [skip, update]
+
+BulkImportFailure:
+  type: object
+  required: [rowNumber, reason]
+  properties:
+    rowNumber:
+      type: integer
+      minimum: 1
+    reason:
+      type: string
+
+BulkImportUsersResponse:
+  type: object
+  required: [createdCount, updatedCount, skippedCount, failures]
+  properties:
+    createdCount:
+      type: integer
+      minimum: 0
+    updatedCount:
+      type: integer
+      minimum: 0
+    skippedCount:
+      type: integer
+      minimum: 0
+    failures:
+      type: array
+      items:
+        $ref: "./users.yaml#/BulkImportFailure"
+
+AuditActor:
+  type: object
+  properties:
+    userId:
+      $ref: "./common.yaml#/Id"
+    displayName:
+      type: string
+    email:
+      type: string
+      format: email
+
+AuditLog:
+  type: object
+  required: [id, action, entityType, entityId, occurredAt]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    action:
+      type: string
+    entityType:
+      type: string
+    entityId:
+      $ref: "./common.yaml#/Id"
+    actor:
+      $ref: "./users.yaml#/AuditActor"
+    changes:
+      type: object
+      additionalProperties: true
+    metadata:
+      type: object
+      additionalProperties: true
+    occurredAt:
+      type: string
+      format: date-time
+
+PaginatedAuditLogs:
+  type: object
+  required: [data, pageInfo]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./users.yaml#/AuditLog"
+    pageInfo:
+      $ref: "./common.yaml#/PageInfo"

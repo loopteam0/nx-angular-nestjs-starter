@@ -1,0 +1,741 @@
+openapi: 3.1.0
+info:
+  title: Generic Operations Template API
+  version: 0.3.0
+  summary: Phase 1 (MVP) API contract for configurable organization operations.
+  license:
+    name: Proprietary
+    identifier: UNLICENSED
+  description: |
+    OpenAPI specification for a domain-agnostic operations template.
+
+    Current contract scope:
+    - Platform bootstrap, health, preferences, and feature flags
+    - Authentication, audit logs, and user/role management
+    - Structure configuration
+    - Entity & Profile Management
+    - Presence tracking
+    - Scheduling and allocation
+    - Evaluations and scoring
+    - Billing and collections
+    - Staff, secondary contact, and member portal read models
+
+    Notes:
+    - Most endpoints require `bearerAuth` (JWT access token).
+    - Scope enforcement is mandatory (e.g., staff only see assigned cohorts; secondary contacts only see linked members).
+    - Error responses are standardized via `ErrorResponse`.
+
+servers:
+  - url: https://api.sms.example.org/api
+    description: Production (example)
+  - url: http://localhost:3000/api
+    description: Local development
+
+tags:
+  - name: Health
+    description: Health, liveness, and readiness endpoints.
+  - name: Platform
+    description: Application bootstrap, preferences, and shared client concerns.
+  - name: Auth
+    description: Authentication and password reset.
+  - name: Me
+    description: Current user identity, preferences, and staff self-service endpoints.
+  - name: Users
+    description: User lifecycle management (admin-only) and bulk import.
+  - name: Roles
+    description: Role and permission management (admin-only).
+  - name: Audit
+    description: Security and data-change audit log (admin-only).
+  - name: Structure
+    description: Structure & configuration (years/terms/levels/groups/topics/time slots/holidays).
+  - name: Members
+    description: Entity & Profile Management CRUD, membership basics, secondary contact linking.
+  - name: Presence
+    description: Presence sessions, bulk marking, reporting, and rules.
+  - name: Evaluations
+    description: Evaluations, components, marks entry, publishing, and results views.
+  - name: Schedule
+    description: Staff assignments, space inventory, schedule entries, and validation.
+  - name: Billing
+    description: Billing plans, invoices, payments, and member ledgers.
+  - name: Portal
+    description: Member and secondary contact portal read models and notifications.
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    $ref: "./paths/health.yaml#/~1health"
+  /health/live:
+    $ref: "./paths/health.yaml#/~1health~1live"
+  /health/ready:
+    $ref: "./paths/health.yaml#/~1health~1ready"
+
+  /auth/login:
+    $ref: "./paths/auth.yaml#/~1auth~1login"
+  /auth/refresh:
+    $ref: "./paths/auth.yaml#/~1auth~1refresh"
+  /auth/logout:
+    $ref: "./paths/auth.yaml#/~1auth~1logout"
+  /auth/forgot-password:
+    $ref: "./paths/auth.yaml#/~1auth~1forgot-password"
+  /auth/reset-password:
+    $ref: "./paths/auth.yaml#/~1auth~1reset-password"
+
+  /platform/bootstrap:
+    $ref: "./paths/platform.yaml#/~1platform~1bootstrap"
+  /feature-flags:
+    $ref: "./paths/platform.yaml#/~1feature-flags"
+  /client-errors:
+    $ref: "./paths/platform.yaml#/~1client-errors"
+
+  /me:
+    $ref: "./paths/me.yaml#/~1me"
+  /me/linked-members:
+    $ref: "./paths/me.yaml#/~1me~1linked-members"
+  /me/preferences:
+    $ref: "./paths/me.yaml#/~1me~1preferences"
+  /me/staff/dashboard:
+    $ref: "./paths/me.yaml#/~1me~1staff~1dashboard"
+  /me/staff/assignments:
+    $ref: "./paths/me.yaml#/~1me~1staff~1assignments"
+  /me/staff/cohorts/{cohortId}/members:
+    $ref: "./paths/me.yaml#/~1me~1staff~1cohorts~1%7BcohortId%7D~1members"
+  /me/staff/schedule:
+    $ref: "./paths/me.yaml#/~1me~1staff~1schedule"
+
+  /users:
+    $ref: "./paths/users.yaml#/~1users"
+  /users/{userId}:
+    $ref: "./paths/users.yaml#/~1users~1%7BuserId%7D"
+  '/users:bulk-import':
+    $ref: "./paths/users.yaml#/~1users:bulk-import"
+  /users/{userId}/status:
+    $ref: "./paths/users.yaml#/~1users~1%7BuserId%7D~1status"
+
+  /roles:
+    $ref: "./paths/roles.yaml#/~1roles"
+  /roles/{roleId}:
+    $ref: "./paths/roles.yaml#/~1roles~1%7BroleId%7D"
+  /permissions:
+    $ref: "./paths/roles.yaml#/~1permissions"
+
+  /audit-logs:
+    $ref: "./paths/audit.yaml#/~1audit-logs"
+
+  /settings/organization:
+    $ref: "./paths/academics.yaml#/~1settings~1organization"
+  /structure/bootstrap:
+    $ref: "./paths/academics.yaml#/~1structure~1bootstrap"
+
+  /structure/years:
+    $ref: "./paths/academics.yaml#/~1structure~1years"
+  /structure/years/{cycleId}:
+    $ref: "./paths/academics.yaml#/~1structure~1years~1%7BcycleId%7D"
+  /structure/terms:
+    $ref: "./paths/academics.yaml#/~1structure~1terms"
+  /structure/terms/{termId}:
+    $ref: "./paths/academics.yaml#/~1structure~1terms~1%7BtermId%7D"
+  /structure/levels:
+    $ref: "./paths/academics.yaml#/~1structure~1levels"
+  /structure/levels/{levelId}:
+    $ref: "./paths/academics.yaml#/~1structure~1levels~1%7BlevelId%7D"
+  /structure/groups:
+    $ref: "./paths/academics.yaml#/~1structure~1groups"
+  /structure/groups/{groupId}:
+    $ref: "./paths/academics.yaml#/~1structure~1groups~1%7BgroupId%7D"
+  /structure/cohorts:
+    $ref: "./paths/academics.yaml#/~1structure~1cohorts"
+  /structure/cohorts/{cohortId}:
+    $ref: "./paths/academics.yaml#/~1structure~1cohorts~1%7BcohortId%7D"
+  /structure/topics:
+    $ref: "./paths/academics.yaml#/~1structure~1topics"
+  /structure/topics/{topicId}:
+    $ref: "./paths/academics.yaml#/~1structure~1topics~1%7BtopicId%7D"
+  '/structure/level-topics:bulk-upsert':
+    $ref: "./paths/academics.yaml#/~1structure~1level-topics:bulk-upsert"
+  /structure/periods:
+    $ref: "./paths/academics.yaml#/~1structure~1periods"
+  /structure/periods/{periodDefinitionId}:
+    $ref: "./paths/academics.yaml#/~1structure~1periods~1%7BperiodDefinitionId%7D"
+  /structure/time-slots:
+    $ref: "./paths/academics.yaml#/~1structure~1time-slots"
+  /structure/time-slots/{timeSlotId}:
+    $ref: "./paths/academics.yaml#/~1structure~1time-slots~1%7BtimeSlotId%7D"
+  /structure/holidays:
+    $ref: "./paths/academics.yaml#/~1structure~1holidays"
+  /structure/holidays/{holidayId}:
+    $ref: "./paths/academics.yaml#/~1structure~1holidays~1%7BholidayId%7D"
+
+  /members:
+    $ref: "./paths/students.yaml#/~1members"
+  /members/{memberId}:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D"
+  /members/{memberId}/archive:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1archive"
+  '/members:bulk-import':
+    $ref: "./paths/students.yaml#/~1members:bulk-import"
+  /members/{memberId}/photo:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1photo"
+  /members/{memberId}/secondary-contacts:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1secondary-contacts"
+  /members/{memberId}/secondary-contacts/{secondaryContactLinkId}:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1secondary-contacts~1%7BsecondaryContactLinkId%7D"
+  /members/{memberId}/memberships:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1memberships"
+  /members/{memberId}/memberships/{membershipId}:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1memberships~1%7BmembershipId%7D"
+  /members/{memberId}/relationships:
+    $ref: "./paths/students.yaml#/~1members~1%7BmemberId%7D~1relationships"
+
+  /presence/sessions:
+    $ref: "./paths/attendance.yaml#/~1presence~1sessions"
+  /presence/sessions/{presenceSessionId}:
+    $ref: "./paths/attendance.yaml#/~1presence~1sessions~1%7BpresenceSessionId%7D"
+  /presence/sessions/{presenceSessionId}/records:
+    $ref: "./paths/attendance.yaml#/~1presence~1sessions~1%7BpresenceSessionId%7D~1records"
+  /presence/sessions/{presenceSessionId}/lock:
+    $ref: "./paths/attendance.yaml#/~1presence~1sessions~1%7BpresenceSessionId%7D~1lock"
+  /presence/members/{memberId}/summary:
+    $ref: "./paths/attendance.yaml#/~1presence~1members~1%7BmemberId%7D~1summary"
+  /presence/members/{memberId}/history:
+    $ref: "./paths/attendance.yaml#/~1presence~1members~1%7BmemberId%7D~1history"
+  /presence/reports/cohort:
+    $ref: "./paths/attendance.yaml#/~1presence~1reports~1cohort"
+  /presence/reports/chronic-absence:
+    $ref: "./paths/attendance.yaml#/~1presence~1reports~1chronic-absence"
+  /presence/rules:
+    $ref: "./paths/attendance.yaml#/~1presence~1rules"
+  /presence/rules/{presenceRuleId}:
+    $ref: "./paths/attendance.yaml#/~1presence~1rules~1%7BpresenceRuleId%7D"
+
+  /evaluations:
+    $ref: "./paths/exams.yaml#/~1evaluations"
+  /evaluations/{evaluationId}:
+    $ref: "./paths/exams.yaml#/~1evaluations~1%7BevaluationId%7D"
+  /evaluations/{evaluationId}/components:
+    $ref: "./paths/exams.yaml#/~1evaluations~1%7BevaluationId%7D~1components"
+  /evaluations/{evaluationId}/components/{evaluationComponentId}:
+    $ref: "./paths/exams.yaml#/~1evaluations~1%7BevaluationId%7D~1components~1%7BevaluationComponentId%7D"
+  /evaluations/{evaluationId}/marks:
+    $ref: "./paths/exams.yaml#/~1evaluations~1%7BevaluationId%7D~1marks"
+  /evaluations/{evaluationId}/publish:
+    $ref: "./paths/exams.yaml#/~1evaluations~1%7BevaluationId%7D~1publish"
+  /evaluations/{evaluationId}/results:
+    $ref: "./paths/exams.yaml#/~1evaluations~1%7BevaluationId%7D~1results"
+  /members/{memberId}/evaluations:
+    $ref: "./paths/exams.yaml#/~1members~1%7BmemberId%7D~1evaluations"
+
+  /schedule/staff-assignments:
+    $ref: "./paths/timetable.yaml#/~1schedule~1staff-assignments"
+  /schedule/staff-assignments/{staffAssignmentId}:
+    $ref: "./paths/timetable.yaml#/~1schedule~1staff-assignments~1%7BstaffAssignmentId%7D"
+  /schedule/spaces:
+    $ref: "./paths/timetable.yaml#/~1schedule~1spaces"
+  /schedule/spaces/{spaceId}:
+    $ref: "./paths/timetable.yaml#/~1schedule~1spaces~1%7BspaceId%7D"
+  '/schedule/entries:bulk-upsert':
+    $ref: "./paths/timetable.yaml#/~1schedule~1entries:bulk-upsert"
+  /schedule/entries:
+    $ref: "./paths/timetable.yaml#/~1schedule~1entries"
+  /schedule/staff:
+    $ref: "./paths/timetable.yaml#/~1schedule~1staff"
+  /schedule/members/{memberId}:
+    $ref: "./paths/timetable.yaml#/~1schedule~1members~1%7BmemberId%7D"
+  /schedule/validate:
+    $ref: "./paths/timetable.yaml#/~1schedule~1validate"
+  /schedule/publish:
+    $ref: "./paths/timetable.yaml#/~1schedule~1publish"
+
+  /billings/types:
+    $ref: "./paths/fees.yaml#/~1billings~1types"
+  /billings/plans:
+    $ref: "./paths/fees.yaml#/~1billings~1plans"
+  /billings/plans/{billingPlanId}:
+    $ref: "./paths/fees.yaml#/~1billings~1plans~1%7BbillingPlanId%7D"
+  '/billings/assignments:bulk-upsert':
+    $ref: "./paths/fees.yaml#/~1billings~1assignments:bulk-upsert"
+  /billings/invoices/generate:
+    $ref: "./paths/fees.yaml#/~1billings~1invoices~1generate"
+  /billings/invoices:
+    $ref: "./paths/fees.yaml#/~1billings~1invoices"
+  /billings/invoices/{invoiceId}:
+    $ref: "./paths/fees.yaml#/~1billings~1invoices~1%7BinvoiceId%7D"
+  /billings/payments:
+    $ref: "./paths/fees.yaml#/~1billings~1payments"
+  /members/{memberId}/billings/ledger:
+    $ref: "./paths/fees.yaml#/~1members~1%7BmemberId%7D~1billings~1ledger"
+  /members/{memberId}/billings/summary:
+    $ref: "./paths/fees.yaml#/~1members~1%7BmemberId%7D~1billings~1summary"
+
+  /portal/member/dashboard:
+    $ref: "./paths/portal.yaml#/~1portal~1member~1dashboard"
+  /portal/member/schedule:
+    $ref: "./paths/portal.yaml#/~1portal~1member~1schedule"
+  /portal/member/presence:
+    $ref: "./paths/portal.yaml#/~1portal~1member~1presence"
+  /portal/member/results:
+    $ref: "./paths/portal.yaml#/~1portal~1member~1results"
+  /portal/member/billings:
+    $ref: "./paths/portal.yaml#/~1portal~1member~1billings"
+  /portal/notifications:
+    $ref: "./paths/portal.yaml#/~1portal~1notifications"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Page:
+      $ref: "./components/parameters/common.yaml#/Page"
+    PageSize:
+      $ref: "./components/parameters/common.yaml#/PageSize"
+    Search:
+      $ref: "./components/parameters/common.yaml#/Search"
+    InvoiceStatus:
+      $ref: "./components/parameters/common.yaml#/InvoiceStatus"
+    From:
+      $ref: "./components/parameters/common.yaml#/From"
+    To:
+      $ref: "./components/parameters/common.yaml#/To"
+    Date:
+      $ref: "./components/parameters/common.yaml#/Date"
+    UserId:
+      $ref: "./components/parameters/common.yaml#/UserId"
+    RoleId:
+      $ref: "./components/parameters/common.yaml#/RoleId"
+    MemberId:
+      $ref: "./components/parameters/common.yaml#/MemberId"
+    TopicId:
+      $ref: "./components/parameters/common.yaml#/TopicId"
+    CycleId:
+      $ref: "./components/parameters/common.yaml#/CycleId"
+    TermId:
+      $ref: "./components/parameters/common.yaml#/TermId"
+    LevelId:
+      $ref: "./components/parameters/common.yaml#/LevelId"
+    GroupId:
+      $ref: "./components/parameters/common.yaml#/GroupId"
+    CohortId:
+      $ref: "./components/parameters/common.yaml#/CohortId"
+    PeriodDefinitionId:
+      $ref: "./components/parameters/common.yaml#/PeriodDefinitionId"
+    TimeSlotId:
+      $ref: "./components/parameters/common.yaml#/TimeSlotId"
+    HolidayId:
+      $ref: "./components/parameters/common.yaml#/HolidayId"
+    EvaluationId:
+      $ref: "./components/parameters/common.yaml#/EvaluationId"
+    EvaluationComponentId:
+      $ref: "./components/parameters/common.yaml#/EvaluationComponentId"
+    PresenceSessionId:
+      $ref: "./components/parameters/common.yaml#/PresenceSessionId"
+    PresenceRuleId:
+      $ref: "./components/parameters/common.yaml#/PresenceRuleId"
+    SecondaryContactLinkId:
+      $ref: "./components/parameters/common.yaml#/SecondaryContactLinkId"
+    MembershipId:
+      $ref: "./components/parameters/common.yaml#/MembershipId"
+    StaffAssignmentId:
+      $ref: "./components/parameters/common.yaml#/StaffAssignmentId"
+    SpaceId:
+      $ref: "./components/parameters/common.yaml#/SpaceId"
+    BillingPlanId:
+      $ref: "./components/parameters/common.yaml#/BillingPlanId"
+    InvoiceId:
+      $ref: "./components/parameters/common.yaml#/InvoiceId"
+
+    CycleIdQuery:
+      $ref: "./components/parameters/common.yaml#/CycleIdQuery"
+    TermIdQuery:
+      $ref: "./components/parameters/common.yaml#/TermIdQuery"
+    LevelIdQuery:
+      $ref: "./components/parameters/common.yaml#/LevelIdQuery"
+    GroupIdQuery:
+      $ref: "./components/parameters/common.yaml#/GroupIdQuery"
+    CohortIdQuery:
+      $ref: "./components/parameters/common.yaml#/CohortIdQuery"
+    TopicIdQuery:
+      $ref: "./components/parameters/common.yaml#/TopicIdQuery"
+    TimeSlotIdQuery:
+      $ref: "./components/parameters/common.yaml#/TimeSlotIdQuery"
+    StaffUserIdQuery:
+      $ref: "./components/parameters/common.yaml#/StaffUserIdQuery"
+    UserIdQuery:
+      $ref: "./components/parameters/common.yaml#/UserIdQuery"
+    MemberIdQuery:
+      $ref: "./components/parameters/common.yaml#/MemberIdQuery"
+
+  responses:
+    BadRequest:
+      $ref: "./components/responses/common.yaml#/BadRequest"
+    Unauthorized:
+      $ref: "./components/responses/common.yaml#/Unauthorized"
+    Forbidden:
+      $ref: "./components/responses/common.yaml#/Forbidden"
+    NotFound:
+      $ref: "./components/responses/common.yaml#/NotFound"
+    Conflict:
+      $ref: "./components/responses/common.yaml#/Conflict"
+
+  schemas:
+    HealthResponse:
+      $ref: "./components/schemas/HealthResponse.yaml"
+
+    Id:
+      $ref: "./components/schemas/common.yaml#/Id"
+    ErrorResponse:
+      $ref: "./components/schemas/common.yaml#/ErrorResponse"
+    PageInfo:
+      $ref: "./components/schemas/common.yaml#/PageInfo"
+    CurrencyCode:
+      $ref: "./components/schemas/common.yaml#/CurrencyCode"
+    Money:
+      $ref: "./components/schemas/common.yaml#/Money"
+    OperationStatusResponse:
+      $ref: "./components/schemas/common.yaml#/OperationStatusResponse"
+    AuditMetadata:
+      $ref: "./components/schemas/common.yaml#/AuditMetadata"
+
+    HealthCheckResponse:
+      $ref: "./components/schemas/HealthResponse.yaml"
+
+    PlatformBootstrapResponse:
+      $ref: "./components/schemas/platform.yaml#/PlatformBootstrapResponse"
+    UserPreferenceResponse:
+      $ref: "./components/schemas/platform.yaml#/UserPreferenceResponse"
+    UpdateUserPreferenceRequest:
+      $ref: "./components/schemas/platform.yaml#/UpdateUserPreferenceRequest"
+    FeatureFlagListResponse:
+      $ref: "./components/schemas/platform.yaml#/FeatureFlagListResponse"
+    ClientErrorEventRequest:
+      $ref: "./components/schemas/platform.yaml#/ClientErrorEventRequest"
+
+    AuthTokens:
+      $ref: "./components/schemas/auth.yaml#/AuthTokens"
+    LoginRequest:
+      $ref: "./components/schemas/auth.yaml#/LoginRequest"
+    RefreshRequest:
+      $ref: "./components/schemas/auth.yaml#/RefreshRequest"
+    LogoutRequest:
+      $ref: "./components/schemas/auth.yaml#/LogoutRequest"
+    ForgotPasswordRequest:
+      $ref: "./components/schemas/auth.yaml#/ForgotPasswordRequest"
+    ResetPasswordRequest:
+      $ref: "./components/schemas/auth.yaml#/ResetPasswordRequest"
+
+    RoleName:
+      $ref: "./components/schemas/users.yaml#/RoleName"
+    UserStatus:
+      $ref: "./components/schemas/users.yaml#/UserStatus"
+    UserType:
+      $ref: "./components/schemas/users.yaml#/UserType"
+    CreateRoleRequest:
+      $ref: "./components/schemas/users.yaml#/CreateRoleRequest"
+    UpdateRoleRequest:
+      $ref: "./components/schemas/users.yaml#/UpdateRoleRequest"
+    RoleResponse:
+      $ref: "./components/schemas/users.yaml#/RoleResponse"
+    RoleListResponse:
+      $ref: "./components/schemas/users.yaml#/RoleListResponse"
+    PermissionListResponse:
+      $ref: "./components/schemas/users.yaml#/PermissionListResponse"
+    CreateUserRequest:
+      $ref: "./components/schemas/users.yaml#/CreateUserRequest"
+    UpdateUserRequest:
+      $ref: "./components/schemas/users.yaml#/UpdateUserRequest"
+    SetUserStatusRequest:
+      $ref: "./components/schemas/users.yaml#/SetUserStatusRequest"
+    UserResponse:
+      $ref: "./components/schemas/users.yaml#/UserResponse"
+    UserListResponse:
+      $ref: "./components/schemas/users.yaml#/UserListResponse"
+    BulkImportUsersRequest:
+      $ref: "./components/schemas/users.yaml#/BulkImportUsersRequest"
+    BulkImportUsersResponse:
+      $ref: "./components/schemas/users.yaml#/BulkImportUsersResponse"
+    MeResponse:
+      $ref: "./components/schemas/portal.yaml#/MeResponse"
+    AuditLog:
+      $ref: "./components/schemas/users.yaml#/AuditLog"
+    PaginatedAuditLogs:
+      $ref: "./components/schemas/users.yaml#/PaginatedAuditLogs"
+
+    StaffDashboardResponse:
+      $ref: "./components/schemas/portal.yaml#/StaffDashboardResponse"
+    StaffAssignmentsResponse:
+      $ref: "./components/schemas/portal.yaml#/StaffAssignmentsResponse"
+    CohortMemberListResponse:
+      $ref: "./components/schemas/portal.yaml#/CohortMemberListResponse"
+    StaffScheduleResponse:
+      $ref: "./components/schemas/portal.yaml#/StaffScheduleResponse"
+    MemberDashboardResponse:
+      $ref: "./components/schemas/portal.yaml#/MemberDashboardResponse"
+    PortalScheduleResponse:
+      $ref: "./components/schemas/portal.yaml#/PortalScheduleResponse"
+    PortalPresenceResponse:
+      $ref: "./components/schemas/portal.yaml#/PortalPresenceResponse"
+    PortalEvaluationsResponse:
+      $ref: "./components/schemas/portal.yaml#/PortalEvaluationsResponse"
+    PortalBillingResponse:
+      $ref: "./components/schemas/portal.yaml#/PortalBillingResponse"
+    PortalNotificationListResponse:
+      $ref: "./components/schemas/portal.yaml#/PortalNotificationListResponse"
+
+    OrganizationSettingsResponse:
+      $ref: "./components/schemas/academics.yaml#/OrganizationSettingsResponse"
+    UpdateOrganizationSettingsRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateOrganizationSettingsRequest"
+    StructuralBootstrapResponse:
+      $ref: "./components/schemas/academics.yaml#/StructuralBootstrapResponse"
+    CycleListResponse:
+      $ref: "./components/schemas/academics.yaml#/CycleListResponse"
+    CycleResponse:
+      $ref: "./components/schemas/academics.yaml#/CycleResponse"
+    CreateCycleRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateCycleRequest"
+    UpdateCycleRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateCycleRequest"
+    TermListResponse:
+      $ref: "./components/schemas/academics.yaml#/TermListResponse"
+    TermResponse:
+      $ref: "./components/schemas/academics.yaml#/TermResponse"
+    CreateTermRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateTermRequest"
+    UpdateTermRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateTermRequest"
+    LevelListResponse:
+      $ref: "./components/schemas/academics.yaml#/LevelListResponse"
+    LevelResponse:
+      $ref: "./components/schemas/academics.yaml#/LevelResponse"
+    CreateLevelRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateLevelRequest"
+    UpdateLevelRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateLevelRequest"
+    GroupListResponse:
+      $ref: "./components/schemas/academics.yaml#/GroupListResponse"
+    GroupResponse:
+      $ref: "./components/schemas/academics.yaml#/GroupResponse"
+    CreateGroupRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateGroupRequest"
+    UpdateGroupRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateGroupRequest"
+    CohortListResponse:
+      $ref: "./components/schemas/academics.yaml#/CohortListResponse"
+    CohortResponse:
+      $ref: "./components/schemas/academics.yaml#/CohortResponse"
+    CreateCohortRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateCohortRequest"
+    UpdateCohortRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateCohortRequest"
+    TopicListResponse:
+      $ref: "./components/schemas/academics.yaml#/TopicListResponse"
+    TopicResponse:
+      $ref: "./components/schemas/academics.yaml#/TopicResponse"
+    CreateTopicRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateTopicRequest"
+    UpdateTopicRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateTopicRequest"
+    BulkUpsertLevelTopicsRequest:
+      $ref: "./components/schemas/academics.yaml#/BulkUpsertLevelTopicsRequest"
+    BulkUpsertLevelTopicsResponse:
+      $ref: "./components/schemas/academics.yaml#/BulkUpsertLevelTopicsResponse"
+    PeriodDefinitionListResponse:
+      $ref: "./components/schemas/academics.yaml#/PeriodDefinitionListResponse"
+    PeriodDefinitionResponse:
+      $ref: "./components/schemas/academics.yaml#/PeriodDefinitionResponse"
+    CreatePeriodDefinitionRequest:
+      $ref: "./components/schemas/academics.yaml#/CreatePeriodDefinitionRequest"
+    UpdatePeriodDefinitionRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdatePeriodDefinitionRequest"
+    TimeSlotListResponse:
+      $ref: "./components/schemas/academics.yaml#/TimeSlotListResponse"
+    TimeSlotResponse:
+      $ref: "./components/schemas/academics.yaml#/TimeSlotResponse"
+    CreateTimeSlotRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateTimeSlotRequest"
+    UpdateTimeSlotRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateTimeSlotRequest"
+    HolidayListResponse:
+      $ref: "./components/schemas/academics.yaml#/HolidayListResponse"
+    HolidayResponse:
+      $ref: "./components/schemas/academics.yaml#/HolidayResponse"
+    CreateHolidayRequest:
+      $ref: "./components/schemas/academics.yaml#/CreateHolidayRequest"
+    UpdateHolidayRequest:
+      $ref: "./components/schemas/academics.yaml#/UpdateHolidayRequest"
+
+    MemberStatus:
+      $ref: "./components/schemas/students.yaml#/MemberStatus"
+    MemberListResponse:
+      $ref: "./components/schemas/students.yaml#/MemberListResponse"
+    MemberResponse:
+      $ref: "./components/schemas/students.yaml#/MemberResponse"
+    CreateMemberRequest:
+      $ref: "./components/schemas/students.yaml#/CreateMemberRequest"
+    UpdateMemberRequest:
+      $ref: "./components/schemas/students.yaml#/UpdateMemberRequest"
+    ArchiveMemberRequest:
+      $ref: "./components/schemas/students.yaml#/ArchiveMemberRequest"
+    BulkImportMembersRequest:
+      $ref: "./components/schemas/students.yaml#/BulkImportMembersRequest"
+    BulkImportMembersResponse:
+      $ref: "./components/schemas/students.yaml#/BulkImportMembersResponse"
+    UploadMemberPhotoRequest:
+      $ref: "./components/schemas/students.yaml#/UploadMemberPhotoRequest"
+    MemberPhotoResponse:
+      $ref: "./components/schemas/students.yaml#/MemberPhotoResponse"
+    LinkSecondaryContactRequest:
+      $ref: "./components/schemas/students.yaml#/LinkSecondaryContactRequest"
+    UpdateSecondaryContactLinkRequest:
+      $ref: "./components/schemas/students.yaml#/UpdateSecondaryContactLinkRequest"
+    MemberSecondaryContactListResponse:
+      $ref: "./components/schemas/students.yaml#/MemberSecondaryContactListResponse"
+    MemberSecondaryContactResponse:
+      $ref: "./components/schemas/students.yaml#/MemberSecondaryContactResponse"
+    MembershipListResponse:
+      $ref: "./components/schemas/students.yaml#/MembershipListResponse"
+    MembershipResponse:
+      $ref: "./components/schemas/students.yaml#/MembershipResponse"
+    CreateMembershipRequest:
+      $ref: "./components/schemas/students.yaml#/CreateMembershipRequest"
+    UpdateMembershipRequest:
+      $ref: "./components/schemas/students.yaml#/UpdateMembershipRequest"
+    RelationshipLinkListResponse:
+      $ref: "./components/schemas/students.yaml#/RelationshipLinkListResponse"
+    RelationshipLinkResponse:
+      $ref: "./components/schemas/students.yaml#/RelationshipLinkResponse"
+    CreateRelationshipLinkRequest:
+      $ref: "./components/schemas/students.yaml#/CreateRelationshipLinkRequest"
+
+    CreatePresenceSessionRequest:
+      $ref: "./components/schemas/attendance.yaml#/CreatePresenceSessionRequest"
+    PresenceSessionResponse:
+      $ref: "./components/schemas/attendance.yaml#/PresenceSessionResponse"
+    PresenceSessionListResponse:
+      $ref: "./components/schemas/attendance.yaml#/PresenceSessionListResponse"
+    BulkUpsertPresenceRecordsRequest:
+      $ref: "./components/schemas/attendance.yaml#/BulkUpsertPresenceRecordsRequest"
+    BulkUpsertPresenceRecordsResponse:
+      $ref: "./components/schemas/attendance.yaml#/BulkUpsertPresenceRecordsResponse"
+    LockPresenceSessionRequest:
+      $ref: "./components/schemas/attendance.yaml#/LockPresenceSessionRequest"
+    MemberPresenceSummaryResponse:
+      $ref: "./components/schemas/attendance.yaml#/MemberPresenceSummaryResponse"
+    MemberPresenceHistoryResponse:
+      $ref: "./components/schemas/attendance.yaml#/MemberPresenceHistoryResponse"
+    CohortPresenceReportResponse:
+      $ref: "./components/schemas/attendance.yaml#/CohortPresenceReportResponse"
+    PresenceAlertListResponse:
+      $ref: "./components/schemas/attendance.yaml#/PresenceAlertListResponse"
+    PresenceRuleListResponse:
+      $ref: "./components/schemas/attendance.yaml#/PresenceRuleListResponse"
+    PresenceRuleResponse:
+      $ref: "./components/schemas/attendance.yaml#/PresenceRuleResponse"
+    CreatePresenceRuleRequest:
+      $ref: "./components/schemas/attendance.yaml#/CreatePresenceRuleRequest"
+    UpdatePresenceRuleRequest:
+      $ref: "./components/schemas/attendance.yaml#/UpdatePresenceRuleRequest"
+
+    StaffAssignmentListResponse:
+      $ref: "./components/schemas/timetable.yaml#/StaffAssignmentListResponse"
+    StaffAssignmentResponse:
+      $ref: "./components/schemas/timetable.yaml#/StaffAssignmentResponse"
+    CreateStaffAssignmentRequest:
+      $ref: "./components/schemas/timetable.yaml#/CreateStaffAssignmentRequest"
+    UpdateStaffAssignmentRequest:
+      $ref: "./components/schemas/timetable.yaml#/UpdateStaffAssignmentRequest"
+    SpaceListResponse:
+      $ref: "./components/schemas/timetable.yaml#/SpaceListResponse"
+    SpaceResponse:
+      $ref: "./components/schemas/timetable.yaml#/SpaceResponse"
+    CreateSpaceRequest:
+      $ref: "./components/schemas/timetable.yaml#/CreateSpaceRequest"
+    UpdateSpaceRequest:
+      $ref: "./components/schemas/timetable.yaml#/UpdateSpaceRequest"
+    ValidateScheduleRequest:
+      $ref: "./components/schemas/timetable.yaml#/ValidateScheduleRequest"
+    ValidateScheduleResponse:
+      $ref: "./components/schemas/timetable.yaml#/ValidateScheduleResponse"
+    BulkUpsertScheduleEntriesRequest:
+      $ref: "./components/schemas/timetable.yaml#/BulkUpsertScheduleEntriesRequest"
+    BulkUpsertScheduleEntriesResponse:
+      $ref: "./components/schemas/timetable.yaml#/BulkUpsertScheduleEntriesResponse"
+    ScheduleEntryListResponse:
+      $ref: "./components/schemas/timetable.yaml#/ScheduleEntryListResponse"
+    PublishScheduleRequest:
+      $ref: "./components/schemas/timetable.yaml#/PublishScheduleRequest"
+    PublishScheduleResponse:
+      $ref: "./components/schemas/timetable.yaml#/PublishScheduleResponse"
+    MemberScheduleResponse:
+      $ref: "./components/schemas/timetable.yaml#/MemberScheduleResponse"
+
+    EvaluationListResponse:
+      $ref: "./components/schemas/exams.yaml#/EvaluationListResponse"
+    EvaluationResponse:
+      $ref: "./components/schemas/exams.yaml#/EvaluationResponse"
+    CreateEvaluationRequest:
+      $ref: "./components/schemas/exams.yaml#/CreateEvaluationRequest"
+    UpdateEvaluationRequest:
+      $ref: "./components/schemas/exams.yaml#/UpdateEvaluationRequest"
+    EvaluationComponentResponse:
+      $ref: "./components/schemas/exams.yaml#/EvaluationComponentResponse"
+    CreateEvaluationComponentRequest:
+      $ref: "./components/schemas/exams.yaml#/CreateEvaluationComponentRequest"
+    UpdateEvaluationComponentRequest:
+      $ref: "./components/schemas/exams.yaml#/UpdateEvaluationComponentRequest"
+    BulkUpsertMarksRequest:
+      $ref: "./components/schemas/exams.yaml#/BulkUpsertMarksRequest"
+    BulkUpsertMarksResponse:
+      $ref: "./components/schemas/exams.yaml#/BulkUpsertMarksResponse"
+    MarksGridResponse:
+      $ref: "./components/schemas/exams.yaml#/MarksGridResponse"
+    PublishEvaluationRequest:
+      $ref: "./components/schemas/exams.yaml#/PublishEvaluationRequest"
+    PublishEvaluationResponse:
+      $ref: "./components/schemas/exams.yaml#/PublishEvaluationResponse"
+    EvaluationResultListResponse:
+      $ref: "./components/schemas/exams.yaml#/EvaluationResultListResponse"
+    MemberEvaluationHistoryResponse:
+      $ref: "./components/schemas/exams.yaml#/MemberEvaluationHistoryResponse"
+
+    InvoiceStatus:
+      $ref: "./components/schemas/fees.yaml#/InvoiceStatus"
+    ChargeTypeListResponse:
+      $ref: "./components/schemas/fees.yaml#/ChargeTypeListResponse"
+    ChargeTypeResponse:
+      $ref: "./components/schemas/fees.yaml#/ChargeTypeResponse"
+    CreateChargeTypeRequest:
+      $ref: "./components/schemas/fees.yaml#/CreateChargeTypeRequest"
+    BillingPlanListResponse:
+      $ref: "./components/schemas/fees.yaml#/BillingPlanListResponse"
+    BillingPlanResponse:
+      $ref: "./components/schemas/fees.yaml#/BillingPlanResponse"
+    CreateBillingPlanRequest:
+      $ref: "./components/schemas/fees.yaml#/CreateBillingPlanRequest"
+    UpdateBillingPlanRequest:
+      $ref: "./components/schemas/fees.yaml#/UpdateBillingPlanRequest"
+    BulkUpsertBillingAssignmentsRequest:
+      $ref: "./components/schemas/fees.yaml#/BulkUpsertBillingAssignmentsRequest"
+    BulkUpsertBillingAssignmentsResponse:
+      $ref: "./components/schemas/fees.yaml#/BulkUpsertBillingAssignmentsResponse"
+    GenerateInvoicesRequest:
+      $ref: "./components/schemas/fees.yaml#/GenerateInvoicesRequest"
+    GenerateInvoicesResponse:
+      $ref: "./components/schemas/fees.yaml#/GenerateInvoicesResponse"
+    InvoiceListResponse:
+      $ref: "./components/schemas/fees.yaml#/InvoiceListResponse"
+    InvoiceResponse:
+      $ref: "./components/schemas/fees.yaml#/InvoiceResponse"
+    RecordPaymentRequest:
+      $ref: "./components/schemas/fees.yaml#/RecordPaymentRequest"
+    PaymentResponse:
+      $ref: "./components/schemas/fees.yaml#/PaymentResponse"
+    MemberLedgerResponse:
+      $ref: "./components/schemas/fees.yaml#/MemberLedgerResponse"
+    MemberBillingSummaryResponse:
+      $ref: "./components/schemas/fees.yaml#/MemberBillingSummaryResponse"

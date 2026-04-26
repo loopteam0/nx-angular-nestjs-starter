@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sms/util": ["libs/shared/util/src/index.ts"],
+      "@sms/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@sms/ui": ["libs/web/ui/src/index.ts"],
+      "@sms/feature-shell": ["libs/web/feature-shell/src/index.ts"],
+      "@sms/api/data-access": ["libs/api/data-access/src/index.ts"],
+      "@sms/api/util": ["libs/api/util/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

@@ -1,0 +1,288 @@
+Page:
+  name: page
+  in: query
+  description: 1-based page index.
+  required: false
+  schema:
+    type: integer
+    minimum: 1
+    default: 1
+
+PageSize:
+  name: pageSize
+  in: query
+  description: Page size for pagination.
+  required: false
+  schema:
+    type: integer
+    minimum: 1
+    maximum: 200
+    default: 25
+
+Search:
+  name: search
+  in: query
+  description: Free-text search.
+  required: false
+  schema:
+    type: string
+    minLength: 1
+
+InvoiceStatus:
+  name: status
+  in: query
+  description: Filter invoices by status.
+  required: false
+  schema:
+    $ref: "../schemas/fees.yaml#/InvoiceStatus"
+
+From:
+  name: from
+  in: query
+  description: Start date/time (inclusive), ISO-8601.
+  required: false
+  schema:
+    type: string
+    format: date-time
+
+To:
+  name: to
+  in: query
+  description: End date/time (inclusive), ISO-8601.
+  required: false
+  schema:
+    type: string
+    format: date-time
+
+Date:
+  name: date
+  in: query
+  description: Date (YYYY-MM-DD).
+  required: false
+  schema:
+    type: string
+    format: date
+
+UserId:
+  name: userId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+RoleId:
+  name: roleId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+MemberId:
+  name: memberId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+TopicId:
+  name: topicId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+CycleId:
+  name: cycleId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+TermId:
+  name: termId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+LevelId:
+  name: levelId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+GroupId:
+  name: groupId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+CohortId:
+  name: cohortId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+PeriodDefinitionId:
+  name: periodDefinitionId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+TimeSlotId:
+  name: timeSlotId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+HolidayId:
+  name: holidayId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+EvaluationId:
+  name: evaluationId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+EvaluationComponentId:
+  name: evaluationComponentId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+PresenceSessionId:
+  name: presenceSessionId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+PresenceRuleId:
+  name: presenceRuleId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+SecondaryContactLinkId:
+  name: secondaryContactLinkId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+MembershipId:
+  name: membershipId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+StaffAssignmentId:
+  name: staffAssignmentId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+SpaceId:
+  name: spaceId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+BillingPlanId:
+  name: billingPlanId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+InvoiceId:
+  name: invoiceId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+CycleIdQuery:
+  name: cycleId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+TermIdQuery:
+  name: termId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+LevelIdQuery:
+  name: levelId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+GroupIdQuery:
+  name: groupId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+CohortIdQuery:
+  name: cohortId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+TopicIdQuery:
+  name: topicId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+TimeSlotIdQuery:
+  name: timeSlotId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+StaffUserIdQuery:
+  name: staffUserId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+UserIdQuery:
+  name: userId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"
+
+MemberIdQuery:
+  name: memberId
+  in: query
+  required: false
+  schema:
+    $ref: "../schemas/common.yaml#/Id"

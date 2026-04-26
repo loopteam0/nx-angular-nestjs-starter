@@ -1,0 +1,104 @@
+/auth/login:
+  post:
+    tags: [Auth]
+    summary: Login
+    description: |
+      Authenticates a user and returns an access token and refresh token.
+      The access token is used as `Authorization: Bearer <token>`.
+    operationId: login
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/LoginRequest"
+    responses:
+      "200":
+        description: Authenticated
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/AuthTokens"
+      "401":
+        $ref: "../spec.yaml#/components/responses/Unauthorized"
+
+/auth/refresh:
+  post:
+    tags: [Auth]
+    summary: Refresh tokens
+    description: Exchanges a refresh token for a new access token (and optionally rotates refresh tokens).
+    operationId: refreshTokens
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/RefreshRequest"
+    responses:
+      "200":
+        description: Refreshed
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/AuthTokens"
+      "401":
+        $ref: "../spec.yaml#/components/responses/Unauthorized"
+
+/auth/logout:
+  post:
+    tags: [Auth]
+    summary: Logout
+    description: Invalidates the current session/refresh token.
+    operationId: logout
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/LogoutRequest"
+    responses:
+      "204":
+        description: Logged out
+      "401":
+        $ref: "../spec.yaml#/components/responses/Unauthorized"
+
+/auth/forgot-password:
+  post:
+    tags: [Auth]
+    summary: Start password reset
+    description: |
+      Initiates a password reset. Always returns 204 to avoid leaking whether an account exists.
+    operationId: forgotPassword
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/ForgotPasswordRequest"
+    responses:
+      "204":
+        description: Request accepted
+      "400":
+        $ref: "../spec.yaml#/components/responses/BadRequest"
+
+/auth/reset-password:
+  post:
+    tags: [Auth]
+    summary: Complete password reset
+    description: Resets a password using a one-time token.
+    operationId: resetPassword
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/ResetPasswordRequest"
+    responses:
+      "204":
+        description: Password reset
+      "400":
+        $ref: "../spec.yaml#/components/responses/BadRequest"

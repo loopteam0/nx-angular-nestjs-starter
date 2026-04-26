@@ -1,0 +1,277 @@
+/billings/types:
+  get:
+    operationId: listChargeTypes
+    tags: [Billing]
+    summary: List billing types.
+    responses:
+      '200':
+        description: Billing types returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/ChargeTypeListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createChargeType
+    tags: [Billing]
+    summary: Create a billing type.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateChargeTypeRequest"
+    responses:
+      '201':
+        description: Billing type created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/ChargeTypeResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/billings/plans:
+  get:
+    operationId: listBillingPlans
+    tags: [Billing]
+    summary: List billing plans.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Billing plans returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BillingPlanListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createBillingPlan
+    tags: [Billing]
+    summary: Create a billing plan.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateBillingPlanRequest"
+    responses:
+      '201':
+        description: Billing plan created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BillingPlanResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/billings/plans/{billingPlanId}:
+  get:
+    operationId: getBillingPlan
+    tags: [Billing]
+    summary: Get a billing plan by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/BillingPlanId"
+    responses:
+      '200':
+        description: Billing plan returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BillingPlanResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateBillingPlan
+    tags: [Billing]
+    summary: Update a billing plan.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/BillingPlanId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateBillingPlanRequest"
+    responses:
+      '200':
+        description: Billing plan updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BillingPlanResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/billings/assignments:bulk-upsert:
+  post:
+    operationId: bulkUpsertBillingAssignments
+    tags: [Billing]
+    summary: Assign billing plans to members in bulk.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkUpsertBillingAssignmentsRequest"
+    responses:
+      '200':
+        description: Billing assignments updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkUpsertBillingAssignmentsResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/billings/invoices/generate:
+  post:
+    operationId: generateInvoices
+    tags: [Billing]
+    summary: Generate invoices from assigned billing plans.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/GenerateInvoicesRequest"
+    responses:
+      '200':
+        description: Invoices generated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/GenerateInvoicesResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/billings/invoices:
+  get:
+    operationId: listInvoices
+    tags: [Billing]
+    summary: List invoices.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/InvoiceStatus"
+      - $ref: "../spec.yaml#/components/parameters/MemberIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+    responses:
+      '200':
+        description: Invoices returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/InvoiceListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/billings/invoices/{invoiceId}:
+  get:
+    operationId: getInvoice
+    tags: [Billing]
+    summary: Get an invoice by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/InvoiceId"
+    responses:
+      '200':
+        description: Invoice returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/InvoiceResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/billings/payments:
+  post:
+    operationId: recordPayment
+    tags: [Billing]
+    summary: Record a payment against an invoice.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/RecordPaymentRequest"
+    responses:
+      '201':
+        description: Payment recorded.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PaymentResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/members/{memberId}/billings/ledger:
+  get:
+    operationId: getMemberLedger
+    tags: [Billing]
+    summary: Get a member's billing ledger.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      '200':
+        description: Member ledger returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberLedgerResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/members/{memberId}/billings/summary:
+  get:
+    operationId: getMemberBillingSummary
+    tags: [Billing]
+    summary: Get billing summary for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    responses:
+      '200':
+        description: Member billing summary returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberBillingSummaryResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"

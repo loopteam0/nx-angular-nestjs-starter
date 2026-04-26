@@ -1,0 +1,63 @@
+AuthTokens:
+  type: object
+  required: [accessToken, refreshToken, tokenType, expiresIn]
+  properties:
+    accessToken:
+      type: string
+      description: JWT access token.
+    refreshToken:
+      type: string
+      description: Opaque refresh token.
+    tokenType:
+      type: string
+      const: Bearer
+    expiresIn:
+      type: integer
+      description: Access token lifetime in seconds.
+      minimum: 1
+
+LoginRequest:
+  type: object
+  required: [username, password]
+  properties:
+    username:
+      type: string
+      description: Email or username.
+      minLength: 1
+    password:
+      type: string
+      format: password
+      minLength: 1
+
+RefreshRequest:
+  type: object
+  required: [refreshToken]
+  properties:
+    refreshToken:
+      type: string
+
+LogoutRequest:
+  type: object
+  properties:
+    refreshToken:
+      type: string
+      description: Refresh token to invalidate (if not inferred from cookie/session).
+
+ForgotPasswordRequest:
+  type: object
+  required: [email]
+  properties:
+    email:
+      type: string
+      format: email
+
+ResetPasswordRequest:
+  type: object
+  required: [token, newPassword]
+  properties:
+    token:
+      type: string
+    newPassword:
+      type: string
+      format: password
+      minLength: 8

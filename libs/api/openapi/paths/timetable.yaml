@@ -1,0 +1,308 @@
+/schedule/staff-assignments:
+  get:
+    operationId: listStaffAssignments
+    tags: [Schedule]
+    summary: List staff assignments.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/StaffUserIdQuery"
+    responses:
+      '200':
+        description: Staff assignments returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffAssignmentListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createStaffAssignment
+    tags: [Schedule]
+    summary: Create a staff assignment.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateStaffAssignmentRequest"
+    responses:
+      '201':
+        description: Staff assignment created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffAssignmentResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/schedule/staff-assignments/{staffAssignmentId}:
+  get:
+    operationId: getStaffAssignment
+    tags: [Schedule]
+    summary: Get a staff assignment by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/StaffAssignmentId"
+    responses:
+      '200':
+        description: Staff assignment returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffAssignmentResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateStaffAssignment
+    tags: [Schedule]
+    summary: Update a staff assignment.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/StaffAssignmentId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateStaffAssignmentRequest"
+    responses:
+      '200':
+        description: Staff assignment updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffAssignmentResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/schedule/spaces:
+  get:
+    operationId: listSpaces
+    tags: [Schedule]
+    summary: List schedule spaces.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Search"
+    responses:
+      '200':
+        description: Spaces returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/SpaceListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createSpace
+    tags: [Schedule]
+    summary: Create a space.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateSpaceRequest"
+    responses:
+      '201':
+        description: Space created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/SpaceResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/schedule/spaces/{spaceId}:
+  get:
+    operationId: getSpace
+    tags: [Schedule]
+    summary: Get a space by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/SpaceId"
+    responses:
+      '200':
+        description: Space returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/SpaceResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateSpace
+    tags: [Schedule]
+    summary: Update a space.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/SpaceId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateSpaceRequest"
+    responses:
+      '200':
+        description: Space updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/SpaceResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/schedule/entries:bulk-upsert:
+  post:
+    operationId: bulkUpsertScheduleEntries
+    tags: [Schedule]
+    summary: Create or update schedule entries in bulk.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkUpsertScheduleEntriesRequest"
+    responses:
+      '200':
+        description: Schedule entries saved.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkUpsertScheduleEntriesResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/schedule/entries:
+  get:
+    operationId: listScheduleEntries
+    tags: [Schedule]
+    summary: List schedule entries.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/StaffUserIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TopicIdQuery"
+    responses:
+      '200':
+        description: Schedule entries returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/ScheduleEntryListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/schedule/staff:
+  get:
+    operationId: getStaffSchedule
+    tags: [Schedule]
+    summary: Get a staff schedule view.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/StaffUserIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Staff schedule returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffScheduleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/schedule/members/{memberId}:
+  get:
+    operationId: getMemberSchedule
+    tags: [Schedule]
+    summary: Get a member schedule view.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Member schedule returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberScheduleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/schedule/validate:
+  post:
+    operationId: validateSchedule
+    tags: [Schedule]
+    summary: Validate schedule entries for conflicts.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/ValidateScheduleRequest"
+    responses:
+      '200':
+        description: Schedule validation result returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/ValidateScheduleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/schedule/publish:
+  post:
+    operationId: publishSchedule
+    tags: [Schedule]
+    summary: Publish schedule entries for a term.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/PublishScheduleRequest"
+    responses:
+      '200':
+        description: Schedule published.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PublishScheduleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"

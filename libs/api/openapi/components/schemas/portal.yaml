@@ -1,0 +1,382 @@
+LinkedMemberSummary:
+  type: object
+  required: [memberId, memberName]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    cohortName:
+      type: string
+    relationship:
+      type: string
+    photoUrl:
+      type: string
+      format: uri
+
+PortalIdentityDetail:
+  type: object
+  required: [userId, userType, displayName]
+  properties:
+    userId:
+      $ref: "./common.yaml#/Id"
+    userType:
+      $ref: "./users.yaml#/UserType"
+    displayName:
+      type: string
+    memberId:
+      $ref: "./common.yaml#/Id"
+    linkedMembers:
+      type: array
+      items:
+        $ref: "./portal.yaml#/LinkedMemberSummary"
+    defaultMemberId:
+      $ref: "./common.yaml#/Id"
+
+MeResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/PortalIdentityDetail"
+
+StaffAssignmentView:
+  type: object
+  required: [cohortId, cohortName, topicId, topicName, termId]
+  properties:
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    topicId:
+      $ref: "./common.yaml#/Id"
+    topicName:
+      type: string
+    termId:
+      $ref: "./common.yaml#/Id"
+    memberCount:
+      type: integer
+      minimum: 0
+    nextMeeting:
+      type: string
+      format: date-time
+
+QuickLink:
+  type: object
+  required: [id, label, route]
+  properties:
+    id:
+      type: string
+    label:
+      type: string
+    route:
+      type: string
+
+StaffDashboardDetail:
+  type: object
+  required: [staffUserId, displayName, todayAssignments, pendingPresenceCount, pendingScoresCount]
+  properties:
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    displayName:
+      type: string
+    todayAssignments:
+      type: array
+      items:
+        $ref: "./portal.yaml#/StaffAssignmentView"
+    nextSession:
+      $ref: "./portal.yaml#/StaffAssignmentView"
+    pendingPresenceCount:
+      type: integer
+      minimum: 0
+    pendingScoresCount:
+      type: integer
+      minimum: 0
+    quickLinks:
+      type: array
+      items:
+        $ref: "./portal.yaml#/QuickLink"
+
+StaffDashboardResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/StaffDashboardDetail"
+
+StaffAssignmentsResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./portal.yaml#/StaffAssignmentView"
+
+MemberListItem:
+  type: object
+  required: [memberId, memberNumber, fullName]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberNumber:
+      type: string
+    fullName:
+      type: string
+    photoUrl:
+      type: string
+      format: uri
+    presenceFlag:
+      type: string
+
+CohortMemberListDetail:
+  type: object
+  required: [cohortId, cohortName, members]
+  properties:
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    members:
+      type: array
+      items:
+        $ref: "./portal.yaml#/MemberListItem"
+    leadStaffName:
+      type: string
+
+CohortMemberListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/CohortMemberListDetail"
+
+StaffScheduleResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./timetable.yaml#/StaffScheduleDetail"
+
+DashboardPresenceSummary:
+  type: object
+  required: [presentCount, absentCount, lateCount, excusedCount, presenceRate]
+  properties:
+    presentCount:
+      type: integer
+      minimum: 0
+    absentCount:
+      type: integer
+      minimum: 0
+    lateCount:
+      type: integer
+      minimum: 0
+    excusedCount:
+      type: integer
+      minimum: 0
+    presenceRate:
+      type: number
+      minimum: 0
+      maximum: 100
+
+DashboardSessionPreview:
+  type: object
+  required: [cohortName, topicName, startsAt, spaceName]
+  properties:
+    cohortName:
+      type: string
+    topicName:
+      type: string
+    startsAt:
+      type: string
+      format: date-time
+    spaceName:
+      type: string
+
+DashboardEvaluationPreview:
+  type: object
+  required: [evaluationName, topicName, finalLevel]
+  properties:
+    evaluationName:
+      type: string
+    topicName:
+      type: string
+    finalLevel:
+      type: string
+    publishedAt:
+      type: string
+      format: date-time
+
+PortalBillingSummaryCard:
+  type: object
+  required: [currentBalance, overdueAmount]
+  properties:
+    currentBalance:
+      $ref: "./common.yaml#/Money"
+    overdueAmount:
+      $ref: "./common.yaml#/Money"
+
+PortalNotificationDetail:
+  type: object
+  required: [id, type, title, createdAt]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    type:
+      type: string
+    title:
+      type: string
+    bodyPreview:
+      type: string
+    createdAt:
+      type: string
+      format: date-time
+    readAt:
+      type: string
+      format: date-time
+
+MemberDashboardDetail:
+  type: object
+  required: [member, presenceSummary, upcomingSessions, latestResults, billingSummary, notifications]
+  properties:
+    member:
+      $ref: "./portal.yaml#/LinkedMemberSummary"
+    presenceSummary:
+      $ref: "./portal.yaml#/DashboardPresenceSummary"
+    upcomingSessions:
+      type: array
+      items:
+        $ref: "./portal.yaml#/DashboardSessionPreview"
+    latestResults:
+      type: array
+      items:
+        $ref: "./portal.yaml#/DashboardEvaluationPreview"
+    billingSummary:
+      $ref: "./portal.yaml#/PortalBillingSummaryCard"
+    notifications:
+      type: array
+      items:
+        $ref: "./portal.yaml#/PortalNotificationDetail"
+
+MemberDashboardResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/MemberDashboardDetail"
+
+PortalScheduleDetail:
+  type: object
+  required: [member, termId, entries]
+  properties:
+    member:
+      $ref: "./portal.yaml#/LinkedMemberSummary"
+    termId:
+      $ref: "./common.yaml#/Id"
+    entries:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/ScheduleEntryDetail"
+    lastPublishedAt:
+      type: string
+      format: date-time
+
+PortalScheduleResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/PortalScheduleDetail"
+
+PortalPresenceDetail:
+  type: object
+  required: [member, summary, recentRecords]
+  properties:
+    member:
+      $ref: "./portal.yaml#/LinkedMemberSummary"
+    summary:
+      $ref: "./portal.yaml#/DashboardPresenceSummary"
+    recentRecords:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/PresenceRecordDetail"
+
+PortalPresenceResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/PortalPresenceDetail"
+
+PortalEvaluationsDetail:
+  type: object
+  required: [member, results]
+  properties:
+    member:
+      $ref: "./portal.yaml#/LinkedMemberSummary"
+    results:
+      type: array
+      items:
+        $ref: "./exams.yaml#/PublishedResultDetail"
+    latestPublishAt:
+      type: string
+      format: date-time
+
+PortalEvaluationsResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/PortalEvaluationsDetail"
+
+ReceiptPreview:
+  type: object
+  required: [receiptNumber, issuedAt]
+  properties:
+    receiptNumber:
+      type: string
+    issuedAt:
+      type: string
+      format: date-time
+    downloadUrl:
+      type: string
+      format: uri
+
+PortalBillingDetail:
+  type: object
+  required: [member, currentBalance, overdueAmount, openInvoices, recentPayments, receipts]
+  properties:
+    member:
+      $ref: "./portal.yaml#/LinkedMemberSummary"
+    currentBalance:
+      $ref: "./common.yaml#/Money"
+    overdueAmount:
+      $ref: "./common.yaml#/Money"
+    openInvoices:
+      type: array
+      items:
+        $ref: "./fees.yaml#/InvoiceSummary"
+    recentPayments:
+      type: array
+      items:
+        $ref: "./fees.yaml#/PaymentDetail"
+    receipts:
+      type: array
+      items:
+        $ref: "./portal.yaml#/ReceiptPreview"
+
+PortalBillingResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./portal.yaml#/PortalBillingDetail"
+
+PortalNotificationListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./portal.yaml#/PortalNotificationDetail"

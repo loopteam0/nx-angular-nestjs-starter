@@ -1,0 +1,153 @@
+/me:
+  get:
+    operationId: getMe
+    tags: [Me]
+    summary: Get the authenticated user identity and linked portal records.
+    responses:
+      '200':
+        description: Identity payload returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MeResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/me/linked-members:
+  get:
+    operationId: listMyLinkedMembers
+    tags: [Me]
+    summary: List members linked to the authenticated secondary contact account.
+    responses:
+      '200':
+        description: Linked members returned.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/portal.yaml#/LinkedMemberSummary"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/me/preferences:
+  get:
+    operationId: getMyPreferences
+    tags: [Me]
+    summary: Get the authenticated user's platform preferences.
+    responses:
+      '200':
+        description: Preferences returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserPreferenceResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  patch:
+    operationId: updateMyPreferences
+    tags: [Me]
+    summary: Update the authenticated user's platform preferences.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateUserPreferenceRequest"
+    responses:
+      '200':
+        description: Preferences updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/UserPreferenceResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/me/staff/dashboard:
+  get:
+    operationId: getStaffDashboard
+    tags: [Me]
+    summary: Get the staff dashboard aggregate view.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Staff dashboard returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffDashboardResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/me/staff/assignments:
+  get:
+    operationId: listStaffAssignmentsForMe
+    tags: [Me]
+    summary: List cohort assignments for the authenticated staff member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+    responses:
+      '200':
+        description: Staff assignments returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffAssignmentsResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/me/staff/cohorts/{cohortId}/members:
+  get:
+    operationId: getStaffCohortMemberList
+    tags: [Me]
+    summary: Get the member list for a staff member's assigned cohort.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CohortId"
+    responses:
+      '200':
+        description: Cohort member list returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CohortMemberListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/me/staff/schedule:
+  get:
+    operationId: getStaffScheduleForMe
+    tags: [Me]
+    summary: Get the authenticated staff's schedule.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Schedule returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/StaffScheduleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"

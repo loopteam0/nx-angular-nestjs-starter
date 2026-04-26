@@ -1,0 +1,475 @@
+MemberStatus:
+  type: string
+  enum: [prospective, active, inactive, graduated, transferred, archived]
+
+Gender:
+  type: string
+  enum: [male, female, non_binary, undisclosed]
+
+MemberAddress:
+  type: object
+  properties:
+    line1:
+      type: string
+    line2:
+      type: string
+    city:
+      type: string
+    state:
+      type: string
+    postalCode:
+      type: string
+    country:
+      type: string
+
+MemberHealthDetail:
+  type: object
+  properties:
+    bloodGroup:
+      type: string
+    allergies:
+      type: array
+      items:
+        type: string
+    conditions:
+      type: array
+      items:
+        type: string
+    medications:
+      type: array
+      items:
+        type: string
+    physicianName:
+      type: string
+    physicianPhoneNumber:
+      type: string
+
+MemberSummary:
+  type: object
+  required: [id, memberNumber, fullName, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    memberNumber:
+      type: string
+    fullName:
+      type: string
+    firstName:
+      type: string
+    lastName:
+      type: string
+    gender:
+      $ref: "./students.yaml#/Gender"
+    dateOfBirth:
+      type: string
+      format: date
+    status:
+      $ref: "./students.yaml#/MemberStatus"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    primarySecondaryContactName:
+      type: string
+    photoUrl:
+      type: string
+      format: uri
+
+MemberDetail:
+  allOf:
+    - $ref: "./students.yaml#/MemberSummary"
+    - type: object
+      properties:
+        middleName:
+          type: string
+        preferredName:
+          type: string
+        nationalIdNumber:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+        address:
+          $ref: "./students.yaml#/MemberAddress"
+        health:
+          $ref: "./students.yaml#/MemberHealthDetail"
+        emergencyContacts:
+          type: array
+          items:
+            $ref: "./students.yaml#/SecondaryContactLinkDetail"
+        audit:
+          $ref: "./common.yaml#/AuditMetadata"
+
+CreateMemberRequest:
+  type: object
+  required: [memberNumber, firstName, lastName, dateOfBirth, gender, cycleId, cohortId]
+  properties:
+    memberNumber:
+      type: string
+    firstName:
+      type: string
+    middleName:
+      type: string
+    lastName:
+      type: string
+    preferredName:
+      type: string
+    dateOfBirth:
+      type: string
+      format: date
+    gender:
+      $ref: "./students.yaml#/Gender"
+    nationalIdNumber:
+      type: string
+    email:
+      type: string
+      format: email
+    phoneNumber:
+      type: string
+    address:
+      $ref: "./students.yaml#/MemberAddress"
+    health:
+      $ref: "./students.yaml#/MemberHealthDetail"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    membershipDate:
+      type: string
+      format: date
+    status:
+      $ref: "./students.yaml#/MemberStatus"
+
+UpdateMemberRequest:
+  type: object
+  properties:
+    firstName:
+      type: string
+    middleName:
+      type: string
+    lastName:
+      type: string
+    preferredName:
+      type: string
+    dateOfBirth:
+      type: string
+      format: date
+    gender:
+      $ref: "./students.yaml#/Gender"
+    email:
+      type: string
+      format: email
+    phoneNumber:
+      type: string
+    address:
+      $ref: "./students.yaml#/MemberAddress"
+    health:
+      $ref: "./students.yaml#/MemberHealthDetail"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    status:
+      $ref: "./students.yaml#/MemberStatus"
+
+ArchiveMemberRequest:
+  type: object
+  required: [reason]
+  properties:
+    reason:
+      type: string
+    effectiveDate:
+      type: string
+      format: date
+
+MemberResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./students.yaml#/MemberDetail"
+
+MemberListResponse:
+  type: object
+  required: [data, pageInfo]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./students.yaml#/MemberSummary"
+    pageInfo:
+      $ref: "./common.yaml#/PageInfo"
+
+BulkImportMemberRow:
+  type: object
+  required: [memberNumber, firstName, lastName, cycleId, cohortId]
+  properties:
+    memberNumber:
+      type: string
+    firstName:
+      type: string
+    middleName:
+      type: string
+    lastName:
+      type: string
+    gender:
+      $ref: "./students.yaml#/Gender"
+    dateOfBirth:
+      type: string
+      format: date
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+
+BulkImportMembersRequest:
+  type: object
+  properties:
+    file:
+      type: string
+      format: binary
+    rows:
+      type: array
+      items:
+        $ref: "./students.yaml#/BulkImportMemberRow"
+    conflictStrategy:
+      type: string
+      enum: [skip, update]
+
+BulkImportMembersResponse:
+  type: object
+  required: [createdCount, updatedCount, skippedCount, failures]
+  properties:
+    createdCount:
+      type: integer
+      minimum: 0
+    updatedCount:
+      type: integer
+      minimum: 0
+    skippedCount:
+      type: integer
+      minimum: 0
+    failures:
+      type: array
+      items:
+        $ref: "./users.yaml#/BulkImportFailure"
+
+UploadMemberPhotoRequest:
+  type: object
+  required: [file]
+  properties:
+    file:
+      type: string
+      format: binary
+
+MemberPhotoResponse:
+  type: object
+  required: [memberId, photoUrl]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    photoUrl:
+      type: string
+      format: uri
+
+SecondaryContactLinkDetail:
+  type: object
+  required: [id, relationship, displayName]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    secondaryContactUserId:
+      $ref: "./common.yaml#/Id"
+    displayName:
+      type: string
+    relationship:
+      type: string
+    phoneNumber:
+      type: string
+    email:
+      type: string
+      format: email
+    isPrimaryContact:
+      type: boolean
+    pickupAuthorized:
+      type: boolean
+
+LinkSecondaryContactRequest:
+  type: object
+  required: [relationship]
+  properties:
+    secondaryContactUserId:
+      $ref: "./common.yaml#/Id"
+    secondaryContactName:
+      type: string
+    secondaryContactEmail:
+      type: string
+      format: email
+    secondaryContactPhoneNumber:
+      type: string
+    relationship:
+      type: string
+    isPrimaryContact:
+      type: boolean
+    pickupAuthorized:
+      type: boolean
+
+UpdateSecondaryContactLinkRequest:
+  type: object
+  properties:
+    relationship:
+      type: string
+    isPrimaryContact:
+      type: boolean
+    pickupAuthorized:
+      type: boolean
+    secondaryContactPhoneNumber:
+      type: string
+    secondaryContactEmail:
+      type: string
+      format: email
+
+MemberSecondaryContactResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./students.yaml#/SecondaryContactLinkDetail"
+
+MemberSecondaryContactListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./students.yaml#/SecondaryContactLinkDetail"
+
+MembershipDetail:
+  type: object
+  required: [id, cycleId, cohortId, startDate, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      type: string
+      enum: [planned, active, completed, transferred, withdrawn]
+    reason:
+      type: string
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateMembershipRequest:
+  type: object
+  required: [cycleId, cohortId, startDate, status]
+  properties:
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      type: string
+      enum: [planned, active, completed, transferred, withdrawn]
+    reason:
+      type: string
+
+UpdateMembershipRequest:
+  type: object
+  properties:
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    startDate:
+      type: string
+      format: date
+    endDate:
+      type: string
+      format: date
+    status:
+      type: string
+      enum: [planned, active, completed, transferred, withdrawn]
+    reason:
+      type: string
+
+MembershipResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./students.yaml#/MembershipDetail"
+
+MembershipListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./students.yaml#/MembershipDetail"
+
+RelationshipLinkDetail:
+  type: object
+  required: [id, relatedMemberId, relatedMemberName, relationshipType]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    relatedMemberId:
+      $ref: "./common.yaml#/Id"
+    relatedMemberName:
+      type: string
+    relationshipType:
+      type: string
+      enum: [peer, shared_contact, other]
+    notes:
+      type: string
+
+CreateRelationshipLinkRequest:
+  type: object
+  required: [relatedMemberId, relationshipType]
+  properties:
+    relatedMemberId:
+      $ref: "./common.yaml#/Id"
+    relationshipType:
+      type: string
+      enum: [peer, shared_contact, other]
+    notes:
+      type: string
+
+RelationshipLinkResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./students.yaml#/RelationshipLinkDetail"
+
+RelationshipLinkListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./students.yaml#/RelationshipLinkDetail"

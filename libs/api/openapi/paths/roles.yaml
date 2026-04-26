@@ -1,0 +1,106 @@
+/roles:
+  get:
+    operationId: listRoles
+    tags: [Roles]
+    summary: List roles and their permissions.
+    responses:
+      '200':
+        description: Roles returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/RoleListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  post:
+    operationId: createRole
+    tags: [Roles]
+    summary: Create a role.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateRoleRequest"
+    responses:
+      '201':
+        description: Role created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/RoleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/roles/{roleId}:
+  get:
+    operationId: getRole
+    tags: [Roles]
+    summary: Get a role by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/RoleId"
+    responses:
+      '200':
+        description: Role returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/RoleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateRole
+    tags: [Roles]
+    summary: Update a role.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/RoleId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateRoleRequest"
+    responses:
+      '200':
+        description: Role updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/RoleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/permissions:
+  get:
+    operationId: listPermissions
+    tags: [Roles]
+    summary: List all permission definitions.
+    responses:
+      '200':
+        description: Permission catalogue returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PermissionListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"

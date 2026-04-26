@@ -1,0 +1,302 @@
+/evaluations:
+  get:
+    operationId: listEvaluations
+    tags: [Evaluations]
+    summary: List evaluations.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TopicIdQuery"
+    responses:
+      '200':
+        description: Evaluations returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createEvaluation
+    tags: [Evaluations]
+    summary: Create an evaluation.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateEvaluationRequest"
+    responses:
+      '201':
+        description: Evaluation created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/evaluations/{evaluationId}:
+  get:
+    operationId: getEvaluation
+    tags: [Evaluations]
+    summary: Get an evaluation by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    responses:
+      '200':
+        description: Evaluation returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateEvaluation
+    tags: [Evaluations]
+    summary: Update an evaluation.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateEvaluationRequest"
+    responses:
+      '200':
+        description: Evaluation updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/evaluations/{evaluationId}/components:
+  get:
+    operationId: listEvaluationComponents
+    tags: [Evaluations]
+    summary: List components for an evaluation.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    responses:
+      '200':
+        description: Evaluation components returned.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/exams.yaml#/EvaluationComponentDetail"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  post:
+    operationId: createEvaluationComponent
+    tags: [Evaluations]
+    summary: Create a component for an evaluation.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateEvaluationComponentRequest"
+    responses:
+      '201':
+        description: Evaluation component created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationComponentResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/evaluations/{evaluationId}/components/{evaluationComponentId}:
+  get:
+    operationId: getEvaluationComponent
+    tags: [Evaluations]
+    summary: Get an evaluation component by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+      - $ref: "../spec.yaml#/components/parameters/EvaluationComponentId"
+    responses:
+      '200':
+        description: Evaluation component returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationComponentResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateEvaluationComponent
+    tags: [Evaluations]
+    summary: Update an evaluation component.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+      - $ref: "../spec.yaml#/components/parameters/EvaluationComponentId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateEvaluationComponentRequest"
+    responses:
+      '200':
+        description: Evaluation component updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationComponentResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/evaluations/{evaluationId}/marks:
+  get:
+    operationId: getEvaluationScoreGrid
+    tags: [Evaluations]
+    summary: Get the marks entry grid for an evaluation.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    responses:
+      '200':
+        description: Marks grid returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MarksGridResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  put:
+    operationId: bulkUpsertMarks
+    tags: [Evaluations]
+    summary: Save evaluation marks in bulk.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkUpsertMarksRequest"
+    responses:
+      '200':
+        description: Marks saved.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkUpsertMarksResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/evaluations/{evaluationId}/publish:
+  post:
+    operationId: publishEvaluation
+    tags: [Evaluations]
+    summary: Publish evaluation results.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/PublishEvaluationRequest"
+    responses:
+      '200':
+        description: Evaluation published.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PublishEvaluationResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/evaluations/{evaluationId}/results:
+  get:
+    operationId: listEvaluationResults
+    tags: [Evaluations]
+    summary: List published results for an evaluation.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/EvaluationId"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+    responses:
+      '200':
+        description: Evaluation results returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/EvaluationResultListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/members/{memberId}/evaluations:
+  get:
+    operationId: getMemberEvaluationHistory
+    tags: [Evaluations]
+    summary: Get a member's published evaluation history.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TermIdQuery"
+    responses:
+      '200':
+        description: Member evaluation history returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberEvaluationHistoryResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"

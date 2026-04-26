@@ -1,0 +1,416 @@
+InvoiceStatus:
+  type: string
+  enum: [draft, issued, partially_paid, paid, overdue, cancelled]
+
+ChargeTypeDetail:
+  type: object
+  required: [id, code, name, amount, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    code:
+      type: string
+    name:
+      type: string
+    description:
+      type: string
+    amount:
+      $ref: "./common.yaml#/Money"
+    isRecurring:
+      type: boolean
+    isActive:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateChargeTypeRequest:
+  type: object
+  required: [code, name, amount]
+  properties:
+    code:
+      type: string
+    name:
+      type: string
+    description:
+      type: string
+    amount:
+      $ref: "./common.yaml#/Money"
+    isRecurring:
+      type: boolean
+    isActive:
+      type: boolean
+
+ChargeTypeResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./fees.yaml#/ChargeTypeDetail"
+
+ChargeTypeListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./fees.yaml#/ChargeTypeDetail"
+
+BillingPlanLineItem:
+  type: object
+  required: [chargeTypeId, amount]
+  properties:
+    chargeTypeId:
+      $ref: "./common.yaml#/Id"
+    chargeTypeName:
+      type: string
+    amount:
+      $ref: "./common.yaml#/Money"
+    mandatory:
+      type: boolean
+
+BillingPlanDetail:
+  type: object
+  required: [id, name, cycleId, targetScope, lineItems]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    description:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    targetScope:
+      type: string
+      enum: [level, class_group, member]
+    targetLevelId:
+      $ref: "./common.yaml#/Id"
+    targetCohortId:
+      $ref: "./common.yaml#/Id"
+    lineItems:
+      type: array
+      items:
+        $ref: "./fees.yaml#/BillingPlanLineItem"
+    activeFrom:
+      type: string
+      format: date
+    activeTo:
+      type: string
+      format: date
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateBillingPlanRequest:
+  type: object
+  required: [name, cycleId, targetScope, lineItems]
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    targetScope:
+      type: string
+      enum: [level, class_group, member]
+    targetLevelId:
+      $ref: "./common.yaml#/Id"
+    targetCohortId:
+      $ref: "./common.yaml#/Id"
+    lineItems:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./fees.yaml#/BillingPlanLineItem"
+    activeFrom:
+      type: string
+      format: date
+    activeTo:
+      type: string
+      format: date
+
+UpdateBillingPlanRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    termId:
+      $ref: "./common.yaml#/Id"
+    lineItems:
+      type: array
+      items:
+        $ref: "./fees.yaml#/BillingPlanLineItem"
+    activeFrom:
+      type: string
+      format: date
+    activeTo:
+      type: string
+      format: date
+
+BillingPlanResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./fees.yaml#/BillingPlanDetail"
+
+BillingPlanListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./fees.yaml#/BillingPlanDetail"
+
+BillingAssignmentInput:
+  type: object
+  required: [memberId, billingPlanId]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    billingPlanId:
+      $ref: "./common.yaml#/Id"
+    effectiveDate:
+      type: string
+      format: date
+
+BulkUpsertBillingAssignmentsRequest:
+  type: object
+  required: [assignments]
+  properties:
+    assignments:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./fees.yaml#/BillingAssignmentInput"
+
+BulkUpsertBillingAssignmentsResponse:
+  type: object
+  required: [assignedCount]
+  properties:
+    assignedCount:
+      type: integer
+      minimum: 0
+
+GenerateInvoicesRequest:
+  type: object
+  required: [cycleId]
+  properties:
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    memberIds:
+      type: array
+      items:
+        $ref: "./common.yaml#/Id"
+    invoiceDate:
+      type: string
+      format: date
+    dueDate:
+      type: string
+      format: date
+
+GenerateInvoicesResponse:
+  type: object
+  required: [generatedCount]
+  properties:
+    generatedCount:
+      type: integer
+      minimum: 0
+    invoiceIds:
+      type: array
+      items:
+        $ref: "./common.yaml#/Id"
+
+InvoiceLineItem:
+  type: object
+  required: [description, amount]
+  properties:
+    description:
+      type: string
+    amount:
+      $ref: "./common.yaml#/Money"
+    chargeTypeId:
+      $ref: "./common.yaml#/Id"
+
+InvoiceSummary:
+  type: object
+  required: [id, invoiceNumber, memberId, status, amountDue, dueDate]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    invoiceNumber:
+      type: string
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    status:
+      $ref: "./fees.yaml#/InvoiceStatus"
+    amountDue:
+      $ref: "./common.yaml#/Money"
+    amountPaid:
+      $ref: "./common.yaml#/Money"
+    dueDate:
+      type: string
+      format: date
+    issuedAt:
+      type: string
+      format: date-time
+
+InvoiceDetail:
+  allOf:
+    - $ref: "./fees.yaml#/InvoiceSummary"
+    - type: object
+      properties:
+        billingPlanId:
+          $ref: "./common.yaml#/Id"
+        lineItems:
+          type: array
+          items:
+            $ref: "./fees.yaml#/InvoiceLineItem"
+        notes:
+          type: string
+        audit:
+          $ref: "./common.yaml#/AuditMetadata"
+
+InvoiceResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./fees.yaml#/InvoiceDetail"
+
+InvoiceListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./fees.yaml#/InvoiceSummary"
+
+RecordPaymentRequest:
+  type: object
+  required: [invoiceId, amount, paidAt, paymentMethod]
+  properties:
+    invoiceId:
+      $ref: "./common.yaml#/Id"
+    amount:
+      $ref: "./common.yaml#/Money"
+    paidAt:
+      type: string
+      format: date-time
+    paymentMethod:
+      type: string
+      enum: [cash, bank_transfer, card, mobile_money, cheque]
+    referenceNumber:
+      type: string
+    notes:
+      type: string
+
+PaymentDetail:
+  type: object
+  required: [id, invoiceId, amount, paidAt, paymentMethod]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    invoiceId:
+      $ref: "./common.yaml#/Id"
+    amount:
+      $ref: "./common.yaml#/Money"
+    paidAt:
+      type: string
+      format: date-time
+    paymentMethod:
+      type: string
+      enum: [cash, bank_transfer, card, mobile_money, cheque]
+    referenceNumber:
+      type: string
+    receiptNumber:
+      type: string
+    recordedBy:
+      $ref: "./common.yaml#/Id"
+
+PaymentResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./fees.yaml#/PaymentDetail"
+
+LedgerEntry:
+  type: object
+  required: [entryType, amount, occurredAt]
+  properties:
+    entryType:
+      type: string
+      enum: [invoice, payment, adjustment]
+    amount:
+      $ref: "./common.yaml#/Money"
+    occurredAt:
+      type: string
+      format: date-time
+    referenceId:
+      $ref: "./common.yaml#/Id"
+    description:
+      type: string
+
+MemberLedgerDetail:
+  type: object
+  required: [memberId, entries, balance]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    entries:
+      type: array
+      items:
+        $ref: "./fees.yaml#/LedgerEntry"
+    balance:
+      $ref: "./common.yaml#/Money"
+
+MemberLedgerResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./fees.yaml#/MemberLedgerDetail"
+
+MemberBillingSummaryDetail:
+  type: object
+  required: [memberId, currentBalance, overdueAmount, openInvoices]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    currentBalance:
+      $ref: "./common.yaml#/Money"
+    overdueAmount:
+      $ref: "./common.yaml#/Money"
+    openInvoices:
+      type: array
+      items:
+        $ref: "./fees.yaml#/InvoiceSummary"
+    recentPayments:
+      type: array
+      items:
+        $ref: "./fees.yaml#/PaymentDetail"
+
+MemberBillingSummaryResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./fees.yaml#/MemberBillingSummaryDetail"

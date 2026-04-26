@@ -1,0 +1,384 @@
+/members:
+  get:
+    operationId: listMembers
+    tags: [Members]
+    summary: List members.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Page"
+      - $ref: "../spec.yaml#/components/parameters/PageSize"
+      - $ref: "../spec.yaml#/components/parameters/Search"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: "../spec.yaml#/components/schemas/MemberStatus"
+    responses:
+      '200':
+        description: Members returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  post:
+    operationId: createMember
+    tags: [Members]
+    summary: Create a member.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateMemberRequest"
+    responses:
+      '201':
+        description: Member created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/members/{memberId}:
+  get:
+    operationId: getMember
+    tags: [Members]
+    summary: Get a member by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    responses:
+      '200':
+        description: Member returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updateMember
+    tags: [Members]
+    summary: Update a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateMemberRequest"
+    responses:
+      '200':
+        description: Member updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/members/{memberId}/archive:
+  post:
+    operationId: archiveMember
+    tags: [Members]
+    summary: Archive a member record.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/ArchiveMemberRequest"
+    responses:
+      '200':
+        description: Member archived.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/members:bulk-import:
+  post:
+    operationId: bulkImportMembers
+    tags: [Members]
+    summary: Import members from a file or supplied rows.
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkImportMembersRequest"
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkImportMembersRequest"
+    responses:
+      '200':
+        description: Member import completed.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkImportMembersResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+
+/members/{memberId}/photo:
+  post:
+    operationId: uploadMemberPhoto
+    tags: [Members]
+    summary: Upload or replace a member photo.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UploadMemberPhotoRequest"
+    responses:
+      '200':
+        description: Member photo updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberPhotoResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/members/{memberId}/secondary-contacts:
+  get:
+    operationId: listMemberSecondaryContacts
+    tags: [Members]
+    summary: List secondary contacts linked to a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    responses:
+      '200':
+        description: Member secondary contacts returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberSecondaryContactListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  post:
+    operationId: linkMemberSecondaryContact
+    tags: [Members]
+    summary: Link a secondary contact to a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/LinkSecondaryContactRequest"
+    responses:
+      '201':
+        description: Secondary contact linked.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberSecondaryContactResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/members/{memberId}/secondary-contacts/{secondaryContactLinkId}:
+  patch:
+    operationId: updateMemberSecondaryContactLink
+    tags: [Members]
+    summary: Update a member-secondary contact link.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/SecondaryContactLinkId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateSecondaryContactLinkRequest"
+    responses:
+      '200':
+        description: Secondary contact link updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberSecondaryContactResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/members/{memberId}/memberships:
+  get:
+    operationId: listMemberMemberships
+    tags: [Members]
+    summary: List membership history for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    responses:
+      '200':
+        description: Memberships returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MembershipListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  post:
+    operationId: createMemberMembership
+    tags: [Members]
+    summary: Create an membership record for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateMembershipRequest"
+    responses:
+      '201':
+        description: Membership created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MembershipResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/members/{memberId}/memberships/{membershipId}:
+  patch:
+    operationId: updateMemberMembership
+    tags: [Members]
+    summary: Update an membership record.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/MembershipId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdateMembershipRequest"
+    responses:
+      '200':
+        description: Membership updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MembershipResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/members/{memberId}/relationships:
+  get:
+    operationId: listMemberRelationshipLinks
+    tags: [Members]
+    summary: List relationships links for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    responses:
+      '200':
+        description: Relationships links returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/RelationshipLinkListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+  post:
+    operationId: createMemberRelationshipLink
+    tags: [Members]
+    summary: Create a relationships link for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreateRelationshipLinkRequest"
+    responses:
+      '201':
+        description: Relationships link created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/RelationshipLinkResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '403':
+        $ref: "../components/responses/common.yaml#/Forbidden"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"

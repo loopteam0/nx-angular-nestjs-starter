@@ -1,0 +1,321 @@
+EvaluationStatus:
+  type: string
+  enum: [draft, ready_for_scoring, published, closed]
+
+EvaluationComponentDetail:
+  type: object
+  required: [id, name, weightPercentage, maxScore]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    weightPercentage:
+      type: number
+      minimum: 0
+      maximum: 100
+    maxScore:
+      type: number
+      minimum: 0
+    passScore:
+      type: number
+      minimum: 0
+
+EvaluationDetail:
+  type: object
+  required: [id, name, cycleId, termId, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    name:
+      type: string
+    code:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    topicId:
+      $ref: "./common.yaml#/Id"
+    topicName:
+      type: string
+    startsOn:
+      type: string
+      format: date
+    endsOn:
+      type: string
+      format: date
+    status:
+      $ref: "./exams.yaml#/EvaluationStatus"
+    components:
+      type: array
+      items:
+        $ref: "./exams.yaml#/EvaluationComponentDetail"
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateEvaluationRequest:
+  type: object
+  required: [name, cycleId, termId, cohortId, topicId, startsOn]
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    topicId:
+      $ref: "./common.yaml#/Id"
+    startsOn:
+      type: string
+      format: date
+    endsOn:
+      type: string
+      format: date
+    status:
+      $ref: "./exams.yaml#/EvaluationStatus"
+
+UpdateEvaluationRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    startsOn:
+      type: string
+      format: date
+    endsOn:
+      type: string
+      format: date
+    status:
+      $ref: "./exams.yaml#/EvaluationStatus"
+
+EvaluationResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./exams.yaml#/EvaluationDetail"
+
+EvaluationListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./exams.yaml#/EvaluationDetail"
+
+CreateEvaluationComponentRequest:
+  type: object
+  required: [name, weightPercentage, maxScore]
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    weightPercentage:
+      type: number
+      minimum: 0
+      maximum: 100
+    maxScore:
+      type: number
+      minimum: 0
+    passScore:
+      type: number
+      minimum: 0
+
+UpdateEvaluationComponentRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    code:
+      type: string
+    weightPercentage:
+      type: number
+      minimum: 0
+      maximum: 100
+    maxScore:
+      type: number
+      minimum: 0
+    passScore:
+      type: number
+      minimum: 0
+
+EvaluationComponentResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./exams.yaml#/EvaluationComponentDetail"
+
+EvaluationScoreGridRow:
+  type: object
+  required: [memberId, memberName, components]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    components:
+      type: array
+      items:
+        type: object
+        required: [evaluationComponentId]
+        properties:
+          evaluationComponentId:
+            $ref: "./common.yaml#/Id"
+          score:
+            type: number
+            minimum: 0
+          leveldAt:
+            type: string
+            format: date-time
+          comment:
+            type: string
+    totalScore:
+      type: number
+      minimum: 0
+    finalLevel:
+      type: string
+
+MarksGridDetail:
+  type: object
+  required: [evaluationId, rows]
+  properties:
+    evaluationId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    rows:
+      type: array
+      items:
+        $ref: "./exams.yaml#/EvaluationScoreGridRow"
+
+MarksGridResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./exams.yaml#/MarksGridDetail"
+
+BulkScoreEntryInput:
+  type: object
+  required: [memberId, evaluationComponentId, score]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    evaluationComponentId:
+      $ref: "./common.yaml#/Id"
+    score:
+      type: number
+      minimum: 0
+    comment:
+      type: string
+
+BulkUpsertMarksRequest:
+  type: object
+  required: [marks]
+  properties:
+    marks:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./exams.yaml#/BulkScoreEntryInput"
+
+BulkUpsertMarksResponse:
+  type: object
+  required: [savedCount]
+  properties:
+    savedCount:
+      type: integer
+      minimum: 0
+    evaluation:
+      $ref: "./exams.yaml#/EvaluationDetail"
+
+PublishEvaluationRequest:
+  type: object
+  properties:
+    publishAt:
+      type: string
+      format: date-time
+    notes:
+      type: string
+
+PublishEvaluationResponse:
+  type: object
+  required: [publishedAt, resultCount]
+  properties:
+    publishedAt:
+      type: string
+      format: date-time
+    resultCount:
+      type: integer
+      minimum: 0
+
+PublishedResultDetail:
+  type: object
+  required: [memberId, evaluationId, topicName, totalScore, finalLevel]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    evaluationId:
+      $ref: "./common.yaml#/Id"
+    evaluationName:
+      type: string
+    topicName:
+      type: string
+    totalScore:
+      type: number
+      minimum: 0
+    finalLevel:
+      type: string
+    positionInCohort:
+      type: integer
+      minimum: 1
+    publishedAt:
+      type: string
+      format: date-time
+
+EvaluationResultListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./exams.yaml#/PublishedResultDetail"
+
+MemberEvaluationHistoryDetail:
+  type: object
+  required: [memberId, results]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    results:
+      type: array
+      items:
+        $ref: "./exams.yaml#/PublishedResultDetail"
+
+MemberEvaluationHistoryResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./exams.yaml#/MemberEvaluationHistoryDetail"

@@ -1,0 +1,47 @@
+/health:
+  get:
+    operationId: getHealth
+    tags: [Health]
+    summary: Get overall platform health.
+    security: []
+    responses:
+      '200':
+        description: Service health snapshot.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HealthCheckResponse"
+
+/health/live:
+  get:
+    operationId: getLiveness
+    tags: [Health]
+    summary: Get liveness status.
+    security: []
+    responses:
+      '200':
+        description: Application process is alive.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HealthCheckResponse"
+
+/health/ready:
+  get:
+    operationId: getReadiness
+    tags: [Health]
+    summary: Get readiness status.
+    security: []
+    responses:
+      '200':
+        description: Application is ready to serve traffic.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HealthCheckResponse"
+      '503':
+        description: One or more required dependencies are unavailable.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/HealthCheckResponse"

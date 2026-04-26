@@ -1,0 +1,22 @@
+/audit-logs:
+  get:
+    tags: [Audit]
+    summary: List audit logs
+    description: Lists audit log entries (admin-only).
+    operationId: listAuditLogs
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Page"
+      - $ref: "../spec.yaml#/components/parameters/PageSize"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      "200":
+        description: Audit logs
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PaginatedAuditLogs"
+      "401":
+        $ref: "../spec.yaml#/components/responses/Unauthorized"
+      "403":
+        $ref: "../spec.yaml#/components/responses/Forbidden"

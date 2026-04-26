@@ -1,0 +1,169 @@
+UpdateUserPreferenceRequest:
+  type: object
+  properties:
+    locale:
+      type: string
+    timezone:
+      type: string
+    dateFormat:
+      type: string
+    numberFormat:
+      type: string
+    startPage:
+      type: string
+    theme:
+      type: string
+
+UserPreferenceDetail:
+  type: object
+  required: [locale, timezone]
+  properties:
+    locale:
+      type: string
+    timezone:
+      type: string
+    dateFormat:
+      type: string
+    numberFormat:
+      type: string
+    startPage:
+      type: string
+    theme:
+      type: string
+
+UserPreferenceResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./platform.yaml#/UserPreferenceDetail"
+
+FeatureFlagDetail:
+  type: object
+  required: [key, enabled]
+  properties:
+    key:
+      type: string
+    enabled:
+      type: boolean
+    audience:
+      type: string
+    description:
+      type: string
+
+FeatureFlagListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./platform.yaml#/FeatureFlagDetail"
+
+NavigationItemDetail:
+  type: object
+  required: [id, labelKey, route]
+  properties:
+    id:
+      type: string
+    labelKey:
+      type: string
+    route:
+      type: string
+    icon:
+      type: string
+    requiredPermissions:
+      type: array
+      items:
+        type: string
+
+NavigationGroup:
+  type: object
+  required: [id, labelKey, items]
+  properties:
+    id:
+      type: string
+    labelKey:
+      type: string
+    items:
+      type: array
+      items:
+        $ref: "./platform.yaml#/NavigationItemDetail"
+
+BrandingDetail:
+  type: object
+  required: [productName]
+  properties:
+    productName:
+      type: string
+    logoUrl:
+      type: string
+      format: uri
+    primaryColor:
+      type: string
+    supportContact:
+      type: string
+
+BootstrapCurrentUser:
+  type: object
+  required: [id, displayName, userType]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    displayName:
+      type: string
+    userType:
+      $ref: "./users.yaml#/UserType"
+    roles:
+      type: array
+      items:
+        $ref: "./users.yaml#/RoleName"
+    homeRoute:
+      type: string
+
+PlatformBootstrapResponse:
+  type: object
+  required: [currentUser, preferences, navigation, featureFlags, branding, supportedLocales, serverTime, apiVersion]
+  properties:
+    currentUser:
+      $ref: "./platform.yaml#/BootstrapCurrentUser"
+    preferences:
+      $ref: "./platform.yaml#/UserPreferenceDetail"
+    navigation:
+      type: array
+      items:
+        $ref: "./platform.yaml#/NavigationGroup"
+    featureFlags:
+      type: array
+      items:
+        $ref: "./platform.yaml#/FeatureFlagDetail"
+    branding:
+      $ref: "./platform.yaml#/BrandingDetail"
+    supportedLocales:
+      type: array
+      items:
+        type: string
+    serverTime:
+      type: string
+      format: date-time
+    apiVersion:
+      type: string
+
+ClientErrorEventRequest:
+  type: object
+  required: [route, message, browserInfo, occurredAt]
+  properties:
+    route:
+      type: string
+    message:
+      type: string
+    stack:
+      type: string
+    browserInfo:
+      type: string
+    context:
+      type: object
+      additionalProperties: true
+    occurredAt:
+      type: string
+      format: date-time

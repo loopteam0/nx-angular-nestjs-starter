@@ -1,0 +1,279 @@
+/presence/sessions:
+  get:
+    operationId: listPresenceSessions
+    tags: [Presence]
+    summary: List presence sessions.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/Date"
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/TopicIdQuery"
+    responses:
+      '200':
+        description: Presence sessions returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceSessionListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createPresenceSession
+    tags: [Presence]
+    summary: Create an presence session.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreatePresenceSessionRequest"
+    responses:
+      '201':
+        description: Presence session created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceSessionResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/presence/sessions/{presenceSessionId}:
+  get:
+    operationId: getPresenceSession
+    tags: [Presence]
+    summary: Get an presence session by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PresenceSessionId"
+    responses:
+      '200':
+        description: Presence session returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceSessionResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/presence/sessions/{presenceSessionId}/records:
+  put:
+    operationId: bulkUpsertPresenceRecords
+    tags: [Presence]
+    summary: Save presence records for a session.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PresenceSessionId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/BulkUpsertPresenceRecordsRequest"
+    responses:
+      '200':
+        description: Presence records saved.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/BulkUpsertPresenceRecordsResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/presence/sessions/{presenceSessionId}/lock:
+  post:
+    operationId: lockPresenceSession
+    tags: [Presence]
+    summary: Lock an presence session against further edits.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PresenceSessionId"
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/LockPresenceSessionRequest"
+    responses:
+      '200':
+        description: Presence session locked.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceSessionResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/presence/members/{memberId}/summary:
+  get:
+    operationId: getMemberPresenceSummary
+    tags: [Presence]
+    summary: Get an presence summary for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      '200':
+        description: Member presence summary returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberPresenceSummaryResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/presence/members/{memberId}/history:
+  get:
+    operationId: getMemberPresenceHistory
+    tags: [Presence]
+    summary: Get presence history for a member.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/MemberId"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      '200':
+        description: Member presence history returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/MemberPresenceHistoryResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+
+/presence/reports/cohort:
+  get:
+    operationId: getCohortPresenceReport
+    tags: [Presence]
+    summary: Get presence report for a cohort.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/From"
+      - $ref: "../spec.yaml#/components/parameters/To"
+    responses:
+      '200':
+        description: Cohort presence report returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/CohortPresenceReportResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/presence/reports/chronic-absence:
+  get:
+    operationId: listChronicAbsenceAlerts
+    tags: [Presence]
+    summary: List members breaching presence alert thresholds.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/CohortIdQuery"
+      - $ref: "../spec.yaml#/components/parameters/CycleIdQuery"
+    responses:
+      '200':
+        description: Presence alerts returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceAlertListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+
+/presence/rules:
+  get:
+    operationId: listPresenceRules
+    tags: [Presence]
+    summary: List presence alert rules.
+    responses:
+      '200':
+        description: Presence rules returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceRuleListResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+  post:
+    operationId: createPresenceRule
+    tags: [Presence]
+    summary: Create an presence alert rule.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/CreatePresenceRuleRequest"
+    responses:
+      '201':
+        description: Presence rule created.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceRuleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"
+
+/presence/rules/{presenceRuleId}:
+  get:
+    operationId: getPresenceRule
+    tags: [Presence]
+    summary: Get an presence rule by id.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PresenceRuleId"
+    responses:
+      '200':
+        description: Presence rule returned.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceRuleResponse"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+  patch:
+    operationId: updatePresenceRule
+    tags: [Presence]
+    summary: Update an presence rule.
+    parameters:
+      - $ref: "../spec.yaml#/components/parameters/PresenceRuleId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../spec.yaml#/components/schemas/UpdatePresenceRuleRequest"
+    responses:
+      '200':
+        description: Presence rule updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../spec.yaml#/components/schemas/PresenceRuleResponse"
+      '400':
+        $ref: "../components/responses/common.yaml#/BadRequest"
+      '401':
+        $ref: "../components/responses/common.yaml#/Unauthorized"
+      '404':
+        $ref: "../components/responses/common.yaml#/NotFound"
+      '409':
+        $ref: "../components/responses/common.yaml#/Conflict"

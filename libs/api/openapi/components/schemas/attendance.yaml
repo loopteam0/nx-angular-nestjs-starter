@@ -1,0 +1,349 @@
+PresenceStatus:
+  type: string
+  enum: [present, absent, late, excused]
+
+PresenceRecordDetail:
+  type: object
+  required: [memberId, status]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    status:
+      $ref: "./attendance.yaml#/PresenceStatus"
+    markedAt:
+      type: string
+      format: date-time
+    markedBy:
+      $ref: "./common.yaml#/Id"
+    note:
+      type: string
+
+PresenceSessionDetail:
+  type: object
+  required: [id, sessionDate, cohortId, topicId, presenceMode, status]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    sessionDate:
+      type: string
+      format: date
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    topicId:
+      $ref: "./common.yaml#/Id"
+    topicName:
+      type: string
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    presenceMode:
+      type: string
+      enum: [daily, period]
+    status:
+      type: string
+      enum: [draft, submitted, locked]
+    records:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/PresenceRecordDetail"
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreatePresenceSessionRequest:
+  type: object
+  required: [sessionDate, cohortId, topicId, presenceMode]
+  properties:
+    sessionDate:
+      type: string
+      format: date
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    topicId:
+      $ref: "./common.yaml#/Id"
+    timeSlotId:
+      $ref: "./common.yaml#/Id"
+    presenceMode:
+      type: string
+      enum: [daily, period]
+
+PresenceSessionResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./attendance.yaml#/PresenceSessionDetail"
+
+PresenceSessionListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/PresenceSessionDetail"
+
+BulkPresenceRecordInput:
+  type: object
+  required: [memberId, status]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    status:
+      $ref: "./attendance.yaml#/PresenceStatus"
+    note:
+      type: string
+
+BulkUpsertPresenceRecordsRequest:
+  type: object
+  required: [records]
+  properties:
+    records:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./attendance.yaml#/BulkPresenceRecordInput"
+    submitted:
+      type: boolean
+
+BulkUpsertPresenceRecordsResponse:
+  type: object
+  required: [savedCount, updatedCount]
+  properties:
+    savedCount:
+      type: integer
+      minimum: 0
+    updatedCount:
+      type: integer
+      minimum: 0
+    session:
+      $ref: "./attendance.yaml#/PresenceSessionDetail"
+
+LockPresenceSessionRequest:
+  type: object
+  properties:
+    reason:
+      type: string
+
+MemberPresenceSummaryDetail:
+  type: object
+  required: [memberId, periodStart, periodEnd, presentCount, absentCount, lateCount, excusedCount, presenceRate]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    periodStart:
+      type: string
+      format: date
+    periodEnd:
+      type: string
+      format: date
+    presentCount:
+      type: integer
+      minimum: 0
+    absentCount:
+      type: integer
+      minimum: 0
+    lateCount:
+      type: integer
+      minimum: 0
+    excusedCount:
+      type: integer
+      minimum: 0
+    presenceRate:
+      type: number
+      minimum: 0
+      maximum: 100
+
+MemberPresenceSummaryResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./attendance.yaml#/MemberPresenceSummaryDetail"
+
+MemberPresenceHistoryDetail:
+  type: object
+  required: [summary, records]
+  properties:
+    summary:
+      $ref: "./attendance.yaml#/MemberPresenceSummaryDetail"
+    records:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/PresenceRecordDetail"
+
+MemberPresenceHistoryResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./attendance.yaml#/MemberPresenceHistoryDetail"
+
+CohortPresenceMemberRow:
+  type: object
+  required: [memberId, memberName, presentCount, absentCount, presenceRate]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    presentCount:
+      type: integer
+      minimum: 0
+    absentCount:
+      type: integer
+      minimum: 0
+    lateCount:
+      type: integer
+      minimum: 0
+    excusedCount:
+      type: integer
+      minimum: 0
+    presenceRate:
+      type: number
+      minimum: 0
+      maximum: 100
+
+CohortPresenceReportDetail:
+  type: object
+  required: [cohortId, periodStart, periodEnd, members]
+  properties:
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    periodStart:
+      type: string
+      format: date
+    periodEnd:
+      type: string
+      format: date
+    members:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/CohortPresenceMemberRow"
+
+CohortPresenceReportResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./attendance.yaml#/CohortPresenceReportDetail"
+
+PresenceAlertDetail:
+  type: object
+  required: [memberId, memberName, thresholdCode, severity, triggeredAt]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    thresholdCode:
+      type: string
+    severity:
+      type: string
+      enum: [low, medium, high]
+    currentValue:
+      type: number
+    triggeredAt:
+      type: string
+      format: date-time
+
+PresenceAlertListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/PresenceAlertDetail"
+
+PresenceRuleDetail:
+  type: object
+  required: [id, code, name, thresholdType, thresholdValue, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    code:
+      type: string
+    name:
+      type: string
+    thresholdType:
+      type: string
+      enum: [absence_count, presence_rate]
+    thresholdValue:
+      type: number
+      minimum: 0
+    periodDays:
+      type: integer
+      minimum: 1
+    severity:
+      type: string
+      enum: [low, medium, high]
+    isActive:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreatePresenceRuleRequest:
+  type: object
+  required: [code, name, thresholdType, thresholdValue, severity]
+  properties:
+    code:
+      type: string
+    name:
+      type: string
+    thresholdType:
+      type: string
+      enum: [absence_count, presence_rate]
+    thresholdValue:
+      type: number
+      minimum: 0
+    periodDays:
+      type: integer
+      minimum: 1
+    severity:
+      type: string
+      enum: [low, medium, high]
+    isActive:
+      type: boolean
+
+UpdatePresenceRuleRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    thresholdType:
+      type: string
+      enum: [absence_count, presence_rate]
+    thresholdValue:
+      type: number
+      minimum: 0
+    periodDays:
+      type: integer
+      minimum: 1
+    severity:
+      type: string
+      enum: [low, medium, high]
+    isActive:
+      type: boolean
+
+PresenceRuleResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./attendance.yaml#/PresenceRuleDetail"
+
+PresenceRuleListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./attendance.yaml#/PresenceRuleDetail"

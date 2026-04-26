@@ -1,0 +1,362 @@
+StaffAssignmentDetail:
+  type: object
+  required: [id, staffUserId, cohortId, topicId, cycleId, termId]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    staffName:
+      type: string
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    topicId:
+      $ref: "./common.yaml#/Id"
+    topicName:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    startsOn:
+      type: string
+      format: date
+    endsOn:
+      type: string
+      format: date
+    loadPercentage:
+      type: number
+      minimum: 0
+      maximum: 100
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateStaffAssignmentRequest:
+  type: object
+  required: [staffUserId, cohortId, topicId, cycleId, termId, startsOn]
+  properties:
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    topicId:
+      $ref: "./common.yaml#/Id"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    startsOn:
+      type: string
+      format: date
+    endsOn:
+      type: string
+      format: date
+    loadPercentage:
+      type: number
+      minimum: 0
+      maximum: 100
+
+UpdateStaffAssignmentRequest:
+  type: object
+  properties:
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    startsOn:
+      type: string
+      format: date
+    endsOn:
+      type: string
+      format: date
+    loadPercentage:
+      type: number
+      minimum: 0
+      maximum: 100
+
+StaffAssignmentResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./timetable.yaml#/StaffAssignmentDetail"
+
+StaffAssignmentListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/StaffAssignmentDetail"
+
+SpaceDetail:
+  type: object
+  required: [id, code, name, capacity, isActive]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    code:
+      type: string
+    name:
+      type: string
+    siteName:
+      type: string
+    capacity:
+      type: integer
+      minimum: 1
+    spaceType:
+      type: string
+      enum: [classspace, laboratory, hall, office, virtual]
+    isActive:
+      type: boolean
+    audit:
+      $ref: "./common.yaml#/AuditMetadata"
+
+CreateSpaceRequest:
+  type: object
+  required: [code, name, capacity, spaceType]
+  properties:
+    code:
+      type: string
+    name:
+      type: string
+    siteName:
+      type: string
+    capacity:
+      type: integer
+      minimum: 1
+    spaceType:
+      type: string
+      enum: [classspace, laboratory, hall, office, virtual]
+    isActive:
+      type: boolean
+
+UpdateSpaceRequest:
+  type: object
+  properties:
+    name:
+      type: string
+    siteName:
+      type: string
+    capacity:
+      type: integer
+      minimum: 1
+    spaceType:
+      type: string
+      enum: [classspace, laboratory, hall, office, virtual]
+    isActive:
+      type: boolean
+
+SpaceResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./timetable.yaml#/SpaceDetail"
+
+SpaceListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/SpaceDetail"
+
+ScheduleEntryDetail:
+  type: object
+  required: [cohortId, topicId, staffUserId, timeSlotId, dayOfWeek, termId]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    topicId:
+      $ref: "./common.yaml#/Id"
+    topicName:
+      type: string
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    staffName:
+      type: string
+    spaceId:
+      $ref: "./common.yaml#/Id"
+    spaceName:
+      type: string
+    timeSlotId:
+      $ref: "./common.yaml#/Id"
+    dayOfWeek:
+      type: string
+      enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    termId:
+      $ref: "./common.yaml#/Id"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    status:
+      type: string
+      enum: [draft, published]
+
+BulkScheduleEntryInput:
+  type: object
+  required: [cohortId, topicId, staffUserId, timeSlotId, dayOfWeek, termId, cycleId]
+  properties:
+    id:
+      $ref: "./common.yaml#/Id"
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    topicId:
+      $ref: "./common.yaml#/Id"
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    spaceId:
+      $ref: "./common.yaml#/Id"
+    timeSlotId:
+      $ref: "./common.yaml#/Id"
+    dayOfWeek:
+      type: string
+      enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    termId:
+      $ref: "./common.yaml#/Id"
+    cycleId:
+      $ref: "./common.yaml#/Id"
+
+BulkUpsertScheduleEntriesRequest:
+  type: object
+  required: [entries]
+  properties:
+    entries:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./timetable.yaml#/BulkScheduleEntryInput"
+
+BulkUpsertScheduleEntriesResponse:
+  type: object
+  required: [savedCount, updatedCount]
+  properties:
+    savedCount:
+      type: integer
+      minimum: 0
+    updatedCount:
+      type: integer
+      minimum: 0
+    entries:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/ScheduleEntryDetail"
+
+ScheduleEntryListResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/ScheduleEntryDetail"
+
+ScheduleConflictDetail:
+  type: object
+  required: [conflictType, message]
+  properties:
+    conflictType:
+      type: string
+      enum: [staff_overlap, space_overlap, cohort_overlap, capacity_mismatch]
+    message:
+      type: string
+    entryIds:
+      type: array
+      items:
+        $ref: "./common.yaml#/Id"
+
+ValidateScheduleRequest:
+  type: object
+  required: [entries]
+  properties:
+    entries:
+      type: array
+      minItems: 1
+      items:
+        $ref: "./timetable.yaml#/BulkScheduleEntryInput"
+
+ValidateScheduleResponse:
+  type: object
+  required: [valid, conflicts]
+  properties:
+    valid:
+      type: boolean
+    conflicts:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/ScheduleConflictDetail"
+
+PublishScheduleRequest:
+  type: object
+  required: [cycleId, termId]
+  properties:
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    notes:
+      type: string
+
+PublishScheduleResponse:
+  type: object
+  required: [publishedEntryCount, publishedAt]
+  properties:
+    publishedEntryCount:
+      type: integer
+      minimum: 0
+    publishedAt:
+      type: string
+      format: date-time
+    versionLabel:
+      type: string
+
+StaffScheduleDetail:
+  type: object
+  required: [staffUserId, entries]
+  properties:
+    staffUserId:
+      $ref: "./common.yaml#/Id"
+    staffName:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    entries:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/ScheduleEntryDetail"
+
+MemberScheduleDetail:
+  type: object
+  required: [memberId, cohortId, entries]
+  properties:
+    memberId:
+      $ref: "./common.yaml#/Id"
+    memberName:
+      type: string
+    cohortId:
+      $ref: "./common.yaml#/Id"
+    cohortName:
+      type: string
+    cycleId:
+      $ref: "./common.yaml#/Id"
+    termId:
+      $ref: "./common.yaml#/Id"
+    entries:
+      type: array
+      items:
+        $ref: "./timetable.yaml#/ScheduleEntryDetail"
+
+MemberScheduleResponse:
+  type: object
+  required: [data]
+  properties:
+    data:
+      $ref: "./timetable.yaml#/MemberScheduleDetail"
