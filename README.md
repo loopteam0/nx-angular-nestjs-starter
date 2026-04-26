@@ -1,48 +1,75 @@
-# School Management System (SMS)
+# Enterprise Starter Template (Nx, Angular 21, NestJS 11)
 
-An open-source, full-stack **School Management System** built as an Nx monorepo. It provides a comprehensive platform for managing student records, attendance, timetables, fees, exams, communication, and more — designed for educational institutions of any size.
+An open-source, full-stack **Starter Template** built as an Nx monorepo. It provides a robust, domain-agnostic foundation for building modern web applications. Originally derived from a management system, it has been generalized into a scalable template featuring an **OpenAPI-first architecture**.
 
 **Stack:** Angular 21 · NestJS 11 · TypeScript · PrimeNG · PostgreSQL · OpenAPI-first
 
-> See [docs/prd.md](docs/prd.md) for the full product requirements and [docs/modules/](docs/modules/) for the phased implementation plan.
+## Key Features
+
+- **OpenAPI-First Architecture**: Single source of truth. Edit the YAML specs to automatically generate the Angular HTTP client and NestJS server stubs.
+- **Nx Monorepo**: Strict module boundaries and fast, cacheable builds.
+- **Modern Tooling**: pnpm 10, Vitest, Playwright, and Prettier/ESLint pre-configured.
 
 ## Quick Start
 
 ```bash
-# Install dependencies (pnpm required)
+# Install dependencies (pnpm is required)
 pnpm install
 
 # Start development servers
-pnpm nx serve web   # Angular at http://localhost:4200
-pnpm nx serve api   # NestJS at http://localhost:3000
+pnpm nx serve web   # Angular frontend at http://localhost:4200
+pnpm nx serve api   # NestJS backend at http://localhost:3000/api
 
 # Build for production
 pnpm nx build web
 pnpm nx build api
 ```
 
+## How to Use this Template
+
+This repository is designed to be adapted to your specific business domain.
+
+1. **Define your Domain (OpenAPI)**
+   The template includes a generic OpenAPI spec in `libs/api/openapi/`. Open these YAML files and modify the schemas (e.g., `members`, `organizations`, `staff`) to match your target domain.
+
+2. **Generate the Code Contracts**
+   Run the code generators to apply your OpenAPI changes:
+
+   ```bash
+   pnpm nx run api-openapi:validate
+   pnpm nx run api-openapi:generate-web-client
+   pnpm nx run api-openapi:generate-nest-server-stub
+   ```
+
+3. **Implement the Backend**
+   The generator creates abstract classes. Create new services in `apps/api/src/app/openapi/` that extend these generated classes to write your actual business logic.
+
+4. **Build the Frontend**
+   The Angular HTTP client is strictly typed and ready to use. Import `DefaultService` from your data-access library and build out your UI in `libs/web/feature-*` modules.
+
 ## Project Structure
 
-```
+The workspace follows strict library isolation rules enforced by Nx:
+
+```text
 ├── apps/
-│   ├── web/              # Angular 21 frontend SPA
-│   ├── web-e2e/          # Playwright E2E tests
-│   ├── api/              # NestJS 11 REST API
-│   └── api-e2e/          # API E2E tests (Jest)
+│   ├── web/               # Angular 21 frontend SPA
+│   ├── web-e2e/           # Playwright E2E tests
+│   ├── api/               # NestJS 11 REST API
+│   └── api-e2e/           # API E2E tests (Jest)
 ├── libs/
 │   ├── shared/
-│   │   ├── util/         # Shared utilities         (@sms/util)
-│   │   └── data-access/  # Generated API client     (@sms/data-access)
+│   │   ├── util/          # Pure functions, no dependencies
+│   │   └── data-access/   # Generated API client & models
 │   ├── web/
-│   │   ├── feature-shell/ # App shell & routing     (@sms/feature-shell)
-│   │   └── ui/            # Reusable UI components  (@sms/ui)
+│   │   ├── feature-shell/ # App shell & routing
+│   │   └── ui/            # Reusable UI presentational components
 │   └── api/
-│       ├── data-access/  # DB entities & repos      (@sms/api/data-access)
-│       ├── util/         # API-specific utilities   (@sms/api/util)
-│       └── openapi/      # OpenAPI spec (YAML)
-└── docs/
-    ├── prd.md            # Product Requirements Document
-    └── modules/          # Phased module specs
+│       ├── data-access/   # DB entities & repositories
+│       ├── util/          # API-specific utilities
+│       └── openapi/       # OpenAPI spec (YAML files)
+└── tools/
+    └── openapi/           # Custom patching scripts for generated stubs
 ```
 
 ## Common Commands
@@ -51,43 +78,34 @@ pnpm nx build api
 |---------|-------------|
 | `pnpm nx serve web` | Start Angular dev server |
 | `pnpm nx serve api` | Start NestJS dev server |
-| `pnpm nx build <project>` | Build a project |
-| `pnpm nx test <project>` | Run unit tests |
+| `pnpm nx build <project>` | Build a specific app or lib |
+| `pnpm nx test <project>` | Run unit tests (Vitest/Jest) |
+| `pnpm nx e2e <project>` | Run E2E tests (Playwright/Jest) |
 | `pnpm nx lint <project>` | Lint a project |
-| `pnpm nx run-many -t test` | Run all unit tests |
+| `pnpm nx format:write` | Format all files with Prettier |
 | `pnpm nx graph` | Visualize project dependencies |
 
-## OpenAPI Workflow
+## Generating Code with Nx
 
-The API is **spec-first**: edit the YAML spec, then regenerate client and server stubs.
-
-| Command | Description |
-|---------|-------------|
-| `pnpm nx run api-openapi:validate` | Validate the OpenAPI spec |
-| `pnpm nx run api-openapi:generate-web-client` | Generate the Angular HTTP client |
-| `pnpm nx run api-openapi:generate-nest-server-stub` | Generate NestJS controller stubs |
-
-After regenerating, implement new endpoints by extending the generated abstract classes in `apps/api/src/app/openapi/`.
-
-## Generate Code
+Keep the architecture consistent by using Nx generators for scaffolding:
 
 ### Angular
 
 ```bash
-# Feature library with routing
+# Create a new feature library with routing
 pnpm nx g @nx/angular:library feature-xyz --directory=libs/web/feature-xyz --standalone --routing --lazy
 
-# Standalone component
+# Create a standalone component in the UI lib
 pnpm nx g @nx/angular:component my-component --project=ui
 ```
 
 ### NestJS
 
 ```bash
-# Module
+# Create a backend module
 pnpm nx g @nx/nest:module xyz --project=api
 
-# Service
+# Create a backend service
 pnpm nx g @nx/nest:service xyz --project=api
 ```
 
@@ -99,7 +117,7 @@ To connect to Nx Cloud for remote caching and distributed task execution:
 pnpm nx connect
 ```
 
-Then generate a CI workflow:
+Then generate a CI workflow for GitHub Actions, GitLab CI, etc.:
 
 ```sh
 pnpm nx g ci-workflow
@@ -107,10 +125,6 @@ pnpm nx g ci-workflow
 
 Learn more: [Nx CI docs](https://nx.dev/ci/intro/ci-with-nx)
 
-## Contributing
-
-Contributions are welcome! Please open an issue or pull request. When adding a new module, follow the patterns in `docs/modules/` and the architecture conventions in `CLAUDE.md` / `.github/copilot-instructions.md`.
-
 ## License
 
-This project is open source. See [LICENSE](LICENSE) for details.
+This template is open source. See [LICENSE](LICENSE) for details.

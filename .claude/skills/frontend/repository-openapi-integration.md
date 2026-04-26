@@ -78,7 +78,7 @@ export abstract class BaseRepository<T> {
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { BaseRepository } from '@sms/data-access';
+import { BaseRepository } from '@/data-access';
 // If/when OpenAPI clients exist, import them here.
 import type { Student, CreateStudentDto, UpdateStudentDto } from '../models';
 

@@ -64,12 +64,12 @@ pnpm nx g @nx/angular:service student \
 {
   "compilerOptions": {
     "paths": {
-      "@sms/util": ["libs/shared/util/src/index.ts"],
-      "@sms/data-access": ["libs/shared/data-access/src/index.ts"],
-      "@sms/ui": ["libs/web/ui/src/index.ts"],
-      "@sms/feature-shell": ["libs/web/feature-shell/src/index.ts"],
-      "@sms/api/data-access": ["libs/api/data-access/src/index.ts"],
-      "@sms/api/util": ["libs/api/util/src/index.ts"]
+      "@/util": ["libs/shared/util/src/index.ts"],
+      "@/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@/ui": ["libs/web/ui/src/index.ts"],
+      "@/feature-shell": ["libs/web/feature-shell/src/index.ts"],
+      "@/api/data-access": ["libs/api/data-access/src/index.ts"],
+      "@/api/util": ["libs/api/util/src/index.ts"]
     }
   }
 }
@@ -163,7 +163,7 @@ export const routes: Routes = [
   {
     path: 'students',
     loadChildren: () =>
-      import('@sms/feature-students').then(m => m.studentsRoutes)
+      import('@/feature-students').then(m => m.studentsRoutes)
   }
 ];
 ```

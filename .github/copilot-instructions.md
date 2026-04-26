@@ -28,7 +28,7 @@ Nx monorepo with Angular 21 frontend, NestJS 11 backend, and OpenAPI-first archi
 # 1. Validate spec changes
 nx run api-openapi:validate
 
-# 2. Generate Angular client (updates @sms/data-access)
+# 2. Generate Angular client (updates @/data-access)
 nx run api-openapi:generate-web-client
 
 # 3. Generate NestJS server stubs (updates apps/api/src/generated)
@@ -72,18 +72,18 @@ Register in `openapi-generated.module.ts` (auto-imports all generated controller
 
 ### Frontend: Using Generated Client
 ```typescript
-// Import from @sms/data-access, not the generated path directly
-import { DefaultService } from '@sms/data-access';
+// Import from @/data-access, not the generated path directly
+import { DefaultService } from '@/data-access';
 ```
 
 ### Library Import Paths (tsconfig.base.json)
 ```typescript
-'@sms/util'           → libs/shared/util
-'@sms/data-access'    → libs/shared/data-access
-'@sms/ui'             → libs/web/ui
-'@sms/feature-shell'  → libs/web/feature-shell
-'@sms/api/data-access'→ libs/api/data-access
-'@sms/api/util'       → libs/api/util
+'@/util'           → libs/shared/util
+'@/data-access'    → libs/shared/data-access
+'@/ui'             → libs/web/ui
+'@/feature-shell'  → libs/web/feature-shell
+'@/api/data-access'→ libs/api/data-access
+'@/api/util'       → libs/api/util
 ```
 
 ## Project Context

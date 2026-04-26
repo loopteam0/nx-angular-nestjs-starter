@@ -371,7 +371,7 @@ export const appRoutes: Routes = [
   {
     path: 'appointments',
     loadChildren: () =>
-      import('@sms/feature-appointments').then(m => m.appointmentsRoutes)
+      import('@/feature-appointments').then(m => m.appointmentsRoutes)
   }
 ];
 ```

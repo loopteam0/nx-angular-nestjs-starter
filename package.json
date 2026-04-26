@@ -1,8 +1,16 @@
 {
-  "name": "@sms/source",
+  "name": "@starter/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "serve:web": "pnpm nx serve web",
+    "serve:api": "pnpm nx serve api",
+    "build:web": "pnpm nx build web",
+    "build:api": "pnpm nx build api",
+    "validate:api-openapi": "pnpm nx run api-openapi:validate",
+    "generate:web-client": "pnpm nx run api-openapi:generate-web-client",
+    "generate:nest-server-stub": "pnpm nx run api-openapi:generate-nest-server-stub"
+  },
   "private": true,
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "~2.1.2",

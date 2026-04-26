@@ -87,14 +87,14 @@ apps/
   api-e2e/       Jest E2E tests for API
 libs/
   shared/
-    util/            @sms/util          — shared utilities
-    data-access/     @sms/data-access   — shared data models/interfaces
+    util/            @/util          — shared utilities
+    data-access/     @/data-access   — shared data models/interfaces
   web/
-    feature-shell/   @sms/feature-shell — routing shell & layout
-    ui/              @sms/ui            — reusable Angular UI components
+    feature-shell/   @/feature-shell — routing shell & layout
+    ui/              @/ui            — reusable Angular UI components
   api/
-    data-access/     @sms/api/data-access — DB entities & repositories
-    util/            @sms/api/util        — API-specific utilities
+    data-access/     @/api/data-access — DB entities & repositories
+    util/            @/api/util        — API-specific utilities
     openapi/         OpenAPI spec (YAML components + paths)
 ```
 
@@ -102,12 +102,12 @@ libs/
 
 | Alias                  | Path                                   |
 | ---------------------- | -------------------------------------- |
-| `@sms/util`            | `libs/shared/util/src/index.ts`        |
-| `@sms/data-access`     | `libs/shared/data-access/src/index.ts` |
-| `@sms/ui`              | `libs/web/ui/src/index.ts`             |
-| `@sms/feature-shell`   | `libs/web/feature-shell/src/index.ts`  |
-| `@sms/api/data-access` | `libs/api/data-access/src/index.ts`    |
-| `@sms/api/util`        | `libs/api/util/src/index.ts`           |
+| `@/util`            | `libs/shared/util/src/index.ts`        |
+| `@/data-access`     | `libs/shared/data-access/src/index.ts` |
+| `@/ui`              | `libs/web/ui/src/index.ts`             |
+| `@/feature-shell`   | `libs/web/feature-shell/src/index.ts`  |
+| `@/api/data-access` | `libs/api/data-access/src/index.ts`    |
+| `@/api/util`        | `libs/api/util/src/index.ts`           |
 
 ### API Architecture (OpenAPI-first)
 
@@ -140,13 +140,13 @@ Use the Nx generators to keep library structure consistent:
 # Frontend feature library
 pnpm nx g @nx/angular:library feature-<name> \
   --directory=libs/web \
-  --importPath=@sms/feature-<name> \
+  --importPath=@/feature-<name> \
   --standalone --routing
 
 # Backend library
 pnpm nx g @nx/nest:library <name> \
   --directory=libs/api \
-  --importPath=@sms/api/<name>
+  --importPath=@/api/<name>
 ```
 
 ### Code Style
